@@ -28,7 +28,7 @@ Legend:
 
 | Item | What it gives you | Notes |
 | --- | --- | --- |
-| `adam01110/fifc` | Exact PR `#49`, exact PR `#52`, exact PR `#54`, and exact PR `#60`; `#49` already includes the PR `#61` behavior | Current fork state: custom rm command, custom fzf opts, preserved directory search opts, eza-first directory preview, fixed escaped query handling, no forced extra Tab bind, binding reapplication when `fish_key_bindings` changes, correct short-name display when the current path contains spaces, apostrophe-safe path completion, improved incomplete-path file completion, and better typed-directory-path matching |
+| `adam01110/fifc` | Exact PR `#49`, exact PR `#52`, exact PR `#54`, and exact PR `#60`; `#49` already includes the PR `#61` behavior | Current fork state: custom rm command, custom fzf opts, preserved directory search opts, eza-first directory preview, fixed escaped query handling, optional case-insensitive matching, no forced extra Tab bind, binding reapplication when `fish_key_bindings` changes, correct short-name display when the current path contains spaces, apostrophe-safe path completion, improved incomplete-path file completion, and better typed-directory-path matching |
 | `justbispo/fifc` | Most of PR `#49`, exact `#52`, exact `#60`, equivalent `#61`, plus extra bug fixes | Best fork if the goal is "bundle several existing PR/fork fixes" |
 | `thalesmello/fifc` | Independent UX and completion behavior changes | Does not really aggregate the open PRs |
 | `schmas/fifc` | Larger UX redesign: hidden files, case-insensitive mode, depth controls, preview changes | Only approximate overlap with `#52` and `#54` |
@@ -50,7 +50,7 @@ Legend:
 
 | Fork | Ahead commits | Exact PR coverage | Approximate/shared changes | Not included |
 | --- | --- | --- | --- | --- |
-| `adam01110/fifc` | 9 | `#49`, `#52`, `#54`, `#60` | `#61` equivalent via `#49` behavior; also includes the fork-only binding persistence fix, path-with-spaces display fix, apostrophe-safe completion fix, incomplete-path file completion fix, and typed-directory matching fix | `#36` |
+| `adam01110/fifc` | 10 | `#49`, `#52`, `#54`, `#60` | `#61` equivalent via `#49` behavior; also includes the fork-only binding persistence fix, path-with-spaces display fix, apostrophe-safe completion fix, incomplete-path file completion fix, case-insensitive matching, and typed-directory matching fix | `#36` |
 | `justbispo/fifc` | 11 | `#49`, `#52`, `#60` | `#61` equivalent via `#49` behavior | `#36`, `#54` |
 | `thalesmello/fifc` | 5 | - | No exact PR carry; only loose UX theme overlap with `#61` because Tab behavior changes inside fzf | `#36`, `#49`, `#52`, `#54`, `#60`, `#61` |
 | `schmas/fifc` | 20 | - | `#52` approximate; `#54` approximate | `#36`, `#49`, `#60`, `#61` |
@@ -83,7 +83,7 @@ Legend:
 | Search ignored files too (`fd --no-ignore`) | - | - | Y | - |
 | Improve file completion for incomplete path strings | Y | - | Y | - |
 | Show hidden files via `fifc_show_hidden=true` | - | - | - | Y |
-| Case-insensitive matching via `fifc_case_insensitive=true` | - | - | - | Y |
+| Case-insensitive matching via `fifc_case_insensitive=true` | Y | - | - | Y |
 | `Tab` / `Shift-Tab` navigate entries inside fzf | - | - | Y | Y |
 | Configurable multi-select key instead of Tab | - | - | - | Y |
 | Interactive depth controls for file/directory search | - | - | - | Y |
@@ -169,12 +169,12 @@ If the goal is to build a personal fork with the highest-value low-overlap chang
 
 1. Start with the independent open PRs: `#36`, `#52`, `#54`, `#60`.
 2. Choose `#49` or `#61`, not both; `#61` is redundant if you already take `#49` or `justbispo/fifc`.
-3. `adam01110/fifc` now also includes the `justbispo/fifc` apostrophe-safe completion fix (`b3f5886`) and the `schmas/fifc` typed-directory matching fix (`4b305f1`), in addition to the earlier binding-persistence fix (`e70150d`) and paths-with-spaces display fix (`caf694e`).
+3. `adam01110/fifc` now also includes the `justbispo/fifc` apostrophe-safe completion fix (`b3f5886`) plus the `schmas/fifc` case-insensitive matching option (`0ca852d`, `8773786`) and typed-directory matching fix (`4b305f1`), in addition to the earlier binding-persistence fix (`e70150d`) and paths-with-spaces display fix (`caf694e`).
 4. Treat `thalesmello/fifc` and `schmas/fifc` as UX forks, not straightforward PR bundles; several of their remaining changes alter navigation, ranking, preview style, or default search scope.
 
 ## Bottom line
 
-- `adam01110/fifc` now carries exact PR `#49`, `#52`, `#54`, and `#60` behavior in one fork, plus the fork-only binding-persistence, path-with-spaces display, apostrophe-safe completion, incomplete-path file completion, and typed-directory matching fixes.
+- `adam01110/fifc` now carries exact PR `#49`, `#52`, `#54`, and `#60` behavior in one fork, plus the fork-only binding-persistence, path-with-spaces display, apostrophe-safe completion, incomplete-path file completion, optional case-insensitive matching, and typed-directory matching fixes.
 - `justbispo/fifc` is no longer uniquely ahead on the apostrophe-safe completion fix; its remaining distinction is the same broader PR bundle plus its own branch history.
 - PR `#36` is still unique and would need to be merged separately.
 - `thalesmello/fifc` and `schmas/fifc` are best mined selectively rather than merged wholesale.

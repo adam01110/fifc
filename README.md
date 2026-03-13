@@ -91,6 +91,14 @@ Show hidden file by default:
 
 ⚠️ Don't use quotes in variables, set them as a list: `set -U fifc_eza_opts --icons --tree`
 
+**Case-insensitive completion matching:**
+
+```fish
+set -U fifc_case_insensitive true
+```
+
+When enabled, fzf will perform case-insensitive matching for all completions. This is particularly useful for `cd` and file path completions where you don't want to worry about exact case matching.
+
 ## 🛠️ Write your own rules
 
 Custom rules can easily be added using the `fifc` command. Actually, all builtin rules are added this way: see [conf.d/fifc.fish](https://github.com/gazorby/fifc/blob/52ff966511ea97ed7be79db469fe178784e22fd8/conf.d/fifc.fish)
