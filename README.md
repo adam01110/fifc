@@ -4,9 +4,11 @@
 
 _fish fzf completions_
 
-[![CI](https://github.com/gazorby/fifc/actions/workflows/ci.yml/badge.svg)](https://github.com/gazorby/fifc/actions/workflows/ci.yml)
+[![CI](https://github.com/adam01110/fifc/actions/workflows/ci.yml/badge.svg)](https://github.com/adam01110/fifc/actions/workflows/ci.yml)
 
 fifc brings fzf powers on top of fish completion engine and allows customizable completion rules
+
+**Fork of [gazorby/fifc](https://github.com/gazorby/fifc) with additional features and customizations**
 
 </div>
 
@@ -31,7 +33,7 @@ fifc brings fzf powers on top of fish completion engine and allows customizable 
 ## 🚀 Install
 
 ```fish
-fisher install gazorby/fifc
+fisher install adam01110/fifc
 ```
 
 ## 🔧 Usage
@@ -85,9 +87,9 @@ Show line number when previewing files:
 
 - `set -U fifc_bat_opts --style=numbers`
 
-Show hidden file by default:
+Show hidden files by default:
 
-- `set -U fifc_fd_opts --hidden`
+- `set -U fifc_show_hidden true`
 
 ⚠️ Don't use quotes in variables, set them as a list: `set -U fifc_eza_opts --icons --tree`
 
@@ -98,6 +100,14 @@ set -U fifc_case_insensitive true
 ```
 
 When enabled, fzf will perform case-insensitive matching for all completions. This is particularly useful for `cd` and file path completions where you don't want to worry about exact case matching.
+
+**Hidden-file completion:**
+
+```fish
+set -U fifc_show_hidden true
+```
+
+When enabled, hidden files and directories (starting with `.`) are shown in completions without needing to type `.` first.
 
 ## 🛠️ Write your own rules
 
@@ -223,4 +233,8 @@ Thanks [PatrickF1](https://github.com/PatrickF1) (and collaborators!), for the g
 
 ## 📝 License
 
-[MIT](https://github.com/gazorby/fifc/blob/87c965fe42a5b2ddb6e0ea84871ca56651db1cb2/LICENSE)
+[MIT](https://github.com/adam01110/fifc/blob/main/LICENSE)
+
+## 🔗 Original Project
+
+This is a fork of [gazorby/fifc](https://github.com/gazorby/fifc). All credit for the original implementation goes to the original author and contributors.
