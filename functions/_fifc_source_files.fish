@@ -1,10 +1,16 @@
 function _fifc_source_files -d "Return a command to recursively find files"
     set -l raw_path (_fifc_path_to_complete)
     set -l escaped_path (string escape -- $raw_path)
+    set -l path_type (string match -rq '/$' -- "$raw_path"; and echo directory; or echo string)
     set -l hidden (string match "*." "$raw_path")
 
     if string match --quiet -- '~*' "$fifc_query"
         set -e fifc_query
+    end
+
+    if test "$path_type" != directory
+        echo _fifc_parse_complist
+        return
     end
 
     if type -q fd
@@ -22,10 +28,8 @@ function _fifc_source_files -d "Return a command to recursively find files"
             echo "fd . $fifc_fd_opts --color=always -- $escaped_path"
         end
     else if test -n "$hidden"
-        # Use sed to strip cwd prefix
         echo "find . $escaped_path $fifc_find_opts ! -path . -print 2>/dev/null | sed 's|^\./||'"
     else
-        # Exclude hidden directories
         echo "find . $escaped_path $fifc_find_opts ! -path . ! -path '*/.*' -print 2>/dev/null | sed 's|^\./||'"
     end
 end

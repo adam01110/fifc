@@ -4,8 +4,7 @@ function _fifc_completion_group -d "Determine completion group"
     set -l is_null (ls -A -- $path_candidate 2> /dev/null | string collect)
     set -l complist (string escape -- (_fifc_expand_tilde (_fifc_parse_complist)))
     # Directories
-    set -l dir_test "test -d $complist[1]"
-    set dir_test (string join -- " -a -d " $dir_test $complist[2..-1])
+    set dir_test "test "(string join -- " -a " "-d "$complist)
     if test -n "$is_null"; and eval "$dir_test"
         echo directories
         # Files
