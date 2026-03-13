@@ -28,12 +28,12 @@ Legend:
 
 | Item | What it gives you | Notes |
 | --- | --- | --- |
-| `adam01110/fifc` | Exact PR `#49` and exact PR `#52`; `#49` already includes the PR `#61` behavior | Current fork state: custom rm command, custom fzf opts, preserved directory search opts, and no forced extra Tab bind |
+| `adam01110/fifc` | Exact PR `#49`, exact PR `#52`, and exact PR `#54`; `#49` already includes the PR `#61` behavior | Current fork state: custom rm command, custom fzf opts, preserved directory search opts, eza-first directory preview, and no forced extra Tab bind |
 | `justbispo/fifc` | Most of PR `#49`, exact `#52`, exact `#60`, equivalent `#61`, plus extra bug fixes | Best fork if the goal is "bundle several existing PR/fork fixes" |
 | `thalesmello/fifc` | Independent UX and completion behavior changes | Does not really aggregate the open PRs |
 | `schmas/fifc` | Larger UX redesign: hidden files, case-insensitive mode, depth controls, preview changes | Only approximate overlap with `#52` and `#54` |
 | PR `#36` | Configurable `fzf` launcher / `fzf-tmux` support | Not present in the three requested forks |
-| PR `#54` | `eza`-first directory preview | Present only approximately in `schmas/fifc` |
+| PR `#54` | `eza`-first directory preview | Exact in `adam01110/fifc`; approximate in `schmas/fifc` |
 
 ## Open pull requests
 
@@ -42,7 +42,7 @@ Legend:
 | [#36](https://github.com/gazorby/fifc/pull/36) `add fzf-tmux support` | `92228dd` | Adds configurable `fifc_fzf_cmd` so the base `fzf -d \t` launcher can be replaced by `fzf-tmux` or another wrapper. | `functions/_fifc.fish` | Independent. No matching fork among the three requested. |
 | [#49](https://github.com/gazorby/fifc/pull/49) `Allow override of rm and custom fzf options` | `90421f8`, `235aace` | Adds `fifc_rm_cmd`; adds `fifc_custom_fzf_opts`; stops forcing a Tab binding so `fifc_keybinding` is respected. | `README.md`, `conf.d/fifc.fish`, `functions/_fifc.fish`, `functions/_fifc_action.fish`, test files | `justbispo/fifc` contains this PR exactly and extends it. Overlaps with `#61`. |
 | [#52](https://github.com/gazorby/fifc/pull/52) `Make directory completions respect fifc_fd_opts` | `d7a44c1` | Directory completion appends `-t d` / `-type d` instead of overwriting existing `fifc_fd_opts` / `fifc_find_opts`. | `functions/_fifc_source_directories.fish` | Exact in `adam01110/fifc` and `justbispo/fifc`; approximate in `schmas/fifc`. |
-| [#54](https://github.com/gazorby/fifc/pull/54) `Use eza instead of exa` | `b79d4bc`, `c269c50` | Prefers `eza` for directory preview, but keeps `exa` fallback for compatibility. | `README.md`, `functions/_fifc_preview_dir.fish` | Approximate only in `schmas/fifc`. |
+| [#54](https://github.com/gazorby/fifc/pull/54) `Use eza instead of exa` | `b79d4bc`, `c269c50` | Prefers `eza` for directory preview, but keeps `exa` fallback for compatibility. | `README.md`, `functions/_fifc_preview_dir.fish` | Exact in `adam01110/fifc`; approximate in `schmas/fifc`. |
 | [#60](https://github.com/gazorby/fifc/pull/60) `Fix escaping fzf query` | `030b7fa` | Replaces broken query trimming with `string unescape`, fixing escaped path queries. | `functions/_fifc.fish` | Exact in `justbispo/fifc`. |
 | [#61](https://github.com/gazorby/fifc/pull/61) `fix: remove extra tab binding` | `6733303` | Removes the unconditional `bind --mode $mode \t _fifc`. | `conf.d/fifc.fish` | Subset of `#49`; equivalent behavior already exists in `justbispo/fifc`. |
 
@@ -50,7 +50,7 @@ Legend:
 
 | Fork | Ahead commits | Exact PR coverage | Approximate/shared changes | Not included |
 | --- | --- | --- | --- | --- |
-| `adam01110/fifc` | 2 | `#49`, `#52` | `#61` equivalent via `#49` behavior | `#36`, `#54`, `#60` |
+| `adam01110/fifc` | 3 | `#49`, `#52`, `#54` | `#61` equivalent via `#49` behavior | `#36`, `#60` |
 | `justbispo/fifc` | 11 | `#49`, `#52`, `#60` | `#61` equivalent via `#49` behavior | `#36`, `#54` |
 | `thalesmello/fifc` | 5 | - | No exact PR carry; only loose UX theme overlap with `#61` because Tab behavior changes inside fzf | `#36`, `#49`, `#52`, `#54`, `#60`, `#61` |
 | `schmas/fifc` | 20 | - | `#52` approximate; `#54` approximate | `#36`, `#49`, `#60`, `#61` |
@@ -66,7 +66,7 @@ Legend:
 | Custom temp-file removal command (`fifc_rm_cmd`) | - | Y | - | - | - | - | Y | Y | - | - |
 | Extra `fzf` flags via config (`fifc_custom_fzf_opts`) | - | Y | - | - | - | - | Y | Y | - | - |
 | Directory completion preserves existing `fifc_fd_opts` / `fifc_find_opts` | - | - | Y | - | - | - | Y | Y | - | ~ |
-| Prefer `eza` for directory preview | - | - | - | Y | - | - | - | - | - | ~ |
+| Prefer `eza` for directory preview | - | - | - | Y | - | - | Y | - | - | ~ |
 | Fix escaped `fzf` query handling | - | - | - | - | Y | - | - | Y | - | - |
 
 ### Fork-only features
@@ -177,7 +177,7 @@ If the goal is to build a personal fork with the highest-value low-overlap chang
 
 ## Bottom line
 
-- `justbispo/fifc` is the strongest base if you want a consolidation fork.
+- `adam01110/fifc` now carries exact PR `#49`, `#52`, and `#54` behavior in one fork.
+- `justbispo/fifc` remains the strongest alternative if you specifically want PR `#60` plus its three extra bug fixes.
 - PR `#36` is still unique and would need to be merged separately.
-- PR `#54` is also still worth evaluating separately unless you prefer the broader preview redesign from `schmas/fifc`.
 - `thalesmello/fifc` and `schmas/fifc` are best mined selectively rather than merged wholesale.
