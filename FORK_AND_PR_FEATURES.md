@@ -28,7 +28,7 @@ Legend:
 
 | Item | What it gives you | Notes |
 | --- | --- | --- |
-| `adam01110/fifc` | Exact PR `#49`, exact PR `#52`, exact PR `#54`, and exact PR `#60`; `#49` already includes the PR `#61` behavior | Current fork state: custom rm command, custom fzf opts, preserved directory search opts, eza-first directory preview, fixed escaped query handling, no forced extra Tab bind, binding reapplication when `fish_key_bindings` changes, and correct short-name display when the current path contains spaces |
+| `adam01110/fifc` | Exact PR `#49`, exact PR `#52`, exact PR `#54`, and exact PR `#60`; `#49` already includes the PR `#61` behavior | Current fork state: custom rm command, custom fzf opts, preserved directory search opts, eza-first directory preview, fixed escaped query handling, no forced extra Tab bind, binding reapplication when `fish_key_bindings` changes, correct short-name display when the current path contains spaces, and apostrophe-safe path completion |
 | `justbispo/fifc` | Most of PR `#49`, exact `#52`, exact `#60`, equivalent `#61`, plus extra bug fixes | Best fork if the goal is "bundle several existing PR/fork fixes" |
 | `thalesmello/fifc` | Independent UX and completion behavior changes | Does not really aggregate the open PRs |
 | `schmas/fifc` | Larger UX redesign: hidden files, case-insensitive mode, depth controls, preview changes | Only approximate overlap with `#52` and `#54` |
@@ -50,7 +50,7 @@ Legend:
 
 | Fork | Ahead commits | Exact PR coverage | Approximate/shared changes | Not included |
 | --- | --- | --- | --- | --- |
-| `adam01110/fifc` | 6 | `#49`, `#52`, `#54`, `#60` | `#61` equivalent via `#49` behavior; also includes the fork-only binding persistence fix and the path-with-spaces display fix | `#36` |
+| `adam01110/fifc` | 7 | `#49`, `#52`, `#54`, `#60` | `#61` equivalent via `#49` behavior; also includes the fork-only binding persistence fix, path-with-spaces display fix, and apostrophe-safe completion fix | `#36` |
 | `justbispo/fifc` | 11 | `#49`, `#52`, `#60` | `#61` equivalent via `#49` behavior | `#36`, `#54` |
 | `thalesmello/fifc` | 5 | - | No exact PR carry; only loose UX theme overlap with `#61` because Tab behavior changes inside fzf | `#36`, `#49`, `#52`, `#54`, `#60`, `#61` |
 | `schmas/fifc` | 20 | - | `#52` approximate; `#54` approximate | `#36`, `#49`, `#60`, `#61` |
@@ -75,7 +75,7 @@ Legend:
 | --- | --- | --- | --- | --- |
 | Reapply bindings when `fish_key_bindings` changes | Y | Y | - | - |
 | Fix path display when current path contains spaces | Y | Y | - | - |
-| Fix completion for paths containing apostrophes | - | Y | - | - |
+| Fix completion for paths containing apostrophes | Y | Y | - | - |
 | Wrap preview window for default source | - | - | Y | - |
 | Open selected man-page option at the correct line | - | - | Y | - |
 | Limit home-directory search depth to 1 | - | - | Y | - |
@@ -169,13 +169,12 @@ If the goal is to build a personal fork with the highest-value low-overlap chang
 
 1. Start with the independent open PRs: `#36`, `#52`, `#54`, `#60`.
 2. Choose `#49` or `#61`, not both; `#61` is redundant if you already take `#49` or `justbispo/fifc`.
-3. `adam01110/fifc` already includes the `justbispo/fifc` binding-persistence fix (`e70150d`) and the paths-with-spaces display fix (`caf694e`). The remaining extra `justbispo/fifc` fix worth considering beyond the PRs is:
-   - `b3f5886` apostrophe-safe completion fix
+3. `adam01110/fifc` now also includes the `justbispo/fifc` apostrophe-safe completion fix (`b3f5886`), in addition to the earlier binding-persistence fix (`e70150d`) and paths-with-spaces display fix (`caf694e`).
 4. Treat `thalesmello/fifc` and `schmas/fifc` as UX forks, not straightforward PR bundles; several of their changes alter navigation, ranking, preview style, or default search scope.
 
 ## Bottom line
 
-- `adam01110/fifc` now carries exact PR `#49`, `#52`, `#54`, and `#60` behavior in one fork, plus the fork-only binding-persistence and path-with-spaces display fixes from `justbispo/fifc`.
-- `justbispo/fifc` remains the strongest alternative if you specifically want the apostrophe-safe completion fix in addition to the shared PR bundle.
+- `adam01110/fifc` now carries exact PR `#49`, `#52`, `#54`, and `#60` behavior in one fork, plus the fork-only binding-persistence, path-with-spaces display, and apostrophe-safe completion fixes from `justbispo/fifc`.
+- `justbispo/fifc` is no longer uniquely ahead on the apostrophe-safe completion fix; its remaining distinction is the same broader PR bundle plus its own branch history.
 - PR `#36` is still unique and would need to be merged separately.
 - `thalesmello/fifc` and `schmas/fifc` are best mined selectively rather than merged wholesale.
