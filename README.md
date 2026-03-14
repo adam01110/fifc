@@ -282,7 +282,3 @@ fifc \
 Thanks [PatrickF1](https://github.com/PatrickF1) (and collaborators!), for the great [fzf.fish](https://github.com/PatrickF1/fzf.fish) plugin which inspired me for the command-based configuration, and from which I copied the ci workflow.
 
 This is a fork of [gazorby/fifc](https://github.com/gazorby/fifc). All credit for the original implementation goes to the original author and contributors.
-
-## License
-
-[MIT](https://github.com/adam01110/fifc/blob/main/LICENSE)
