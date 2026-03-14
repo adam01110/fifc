@@ -28,14 +28,16 @@ function _fifc_source_files -d "Return a command to recursively find files"
             set hidden_flag --hidden
         end
 
+        set -l fd_base_opts $fifc_fd_opts --color=always --no-ignore $hidden_flag $fd_custom_opts
+
         if test "$raw_path" = "$PWD/"
-            echo "fd . $fifc_fd_opts --color=always $hidden_flag $fd_custom_opts"
+            echo "fd . $fd_base_opts"
         else if test "$raw_path" = "."
-            echo "fd . $fifc_fd_opts --color=always $hidden_flag $fd_custom_opts"
+            echo "fd . $fd_base_opts"
         else if test -n "$hidden"
-            echo "fd . $fifc_fd_opts --color=always $hidden_flag -- $escaped_path"
+            echo "fd . $fd_base_opts -- $escaped_path"
         else
-            echo "fd . $fifc_fd_opts --color=always $hidden_flag -- $escaped_path"
+            echo "fd . $fd_base_opts -- $escaped_path"
         end
     else if test -n "$hidden"; or set -q fifc_show_hidden; and test "$fifc_show_hidden" = true
         echo "find . $escaped_path $fifc_find_opts ! -path . -print 2>/dev/null | sed 's|^\./||'"

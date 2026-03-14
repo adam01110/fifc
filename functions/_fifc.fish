@@ -53,6 +53,7 @@ function _fifc
             --reverse \
             --header '$header' \
             --preview '_fifc_action preview {} {q}' \
+            --bind='tab:down,shift-tab:up' \
             --bind='$fifc_open_keybinding:execute(_fifc_action open {} {q} &> /dev/tty)' \
             --query $fifc_safe_query \
             --history=$fifc_history_dir/fzf-history-$history_group \
