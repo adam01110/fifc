@@ -23,6 +23,7 @@ Method:
 Legend:
 
 - `Y` = exact or clearly present
+- `N` = intentionally not planned for merge
 - `~` = approximate / partial / broader variant
 - `subset` = narrower duplicate of a broader change
 - `-` = not present
@@ -64,7 +65,7 @@ Legend:
 
 | Feature | #36 | #49 | #52 | #54 | #60 | #61 | adam01110 | justbispo | thalesmello | schmas |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Custom `fzf` launcher / `fzf-tmux` support (`fifc_fzf_cmd`) | Y | - | - | - | - | - | - | - | - | - |
+| Custom `fzf` launcher / `fzf-tmux` support (`fifc_fzf_cmd`) | Y | - | - | - | - | - | N | - | - | - |
 | Respect `fifc_keybinding` without forced Tab bind | - | Y | - | - | - | Y | Y | Y | - | - |
 | Custom temp-file removal command (`fifc_rm_cmd`) | - | Y | - | - | - | - | Y | Y | - | - |
 | Extra `fzf` flags via config (`fifc_custom_fzf_opts`) | - | Y | - | - | - | - | Y | Y | - | - |
@@ -78,23 +79,23 @@ This is the fork overlay for features that are not coming from the open PR list.
 
 | Feature | Meaning in practice | adam01110 | justbispo | thalesmello | schmas |
 | --- | --- | --- | --- | --- | --- |
-| Reapply bindings when `fish_key_bindings` changes | FIFC keybinding survives switching Fish keymaps. | Yes | Yes | - | - |
-| Actually pass configured `fifc_custom_fzf_opts` to `fzf` | User-defined extra `fzf` flags are really appended instead of being silently ignored. | Yes | Yes | - | - |
-| Fix path display when current path contains spaces | Keeps short relative names when working inside directories with spaces. | Yes | Yes | - | - |
-| Fix completion for paths containing apostrophes | Paths containing `'` do not break the generated `fzf` command. | Yes | Yes | - | - |
-| Wrap preview window for default source | Long preview lines wrap instead of needing horizontal scrolling. | - | - | Yes | - |
-| Open selected man-page option at the correct line | Opening an option jumps to the exact matching line in the man page. | - | - | Yes | - |
-| Limit home-directory search depth to 1 | Completing from `~` only scans the first level by default. | - | - | Yes | - |
-| Store per-group `fzf` query history | Files, options, and other groups keep separate query history. | Yes | - | Yes | - |
-| Search ignored files too (`fd --no-ignore`) | Results include files normally hidden by ignore rules. | Yes | - | Yes | - |
-| Improve file completion for incomplete path strings | Partial paths like `src/mai` keep normal completion behavior instead of falling into a bad recursive search. | Yes | - | Yes | - |
-| Show hidden files via `fifc_show_hidden=true` | Opt-in dotfile visibility in normal completion results. | Yes | - | - | Yes |
-| Case-insensitive matching via `fifc_case_insensitive=true` | Opt-in case-insensitive matching inside `fzf`. | Yes | - | - | Yes |
-| `Tab` / `Shift-Tab` navigate entries inside fzf | `Tab` keys move selection instead of acting as the old multi-select key. | Yes | - | Yes | Yes |
-| Configurable multi-select key instead of Tab | Multi-select moves off `Tab` and can be reassigned. | - | - | - | Yes |
-| Interactive depth controls for file/directory search | Search depth can be changed live from inside the picker. | - | - | - | Yes |
-| Vertical directory preview with optional custom command | Directory preview becomes a one-entry-per-line list and can be overridden. | - | - | - | Yes |
-| Better matching when completing inside an already-typed directory path | Typed directory prefix becomes search scope instead of part of the exact match text. | Yes | - | - | Yes |
+| Reapply bindings when `fish_key_bindings` changes | FIFC keybinding survives switching Fish keymaps. | Y | Y | - | - |
+| Actually pass configured `fifc_custom_fzf_opts` to `fzf` | User-defined extra `fzf` flags are really appended instead of being silently ignored. | Y | Y | - | - |
+| Fix path display when current path contains spaces | Keeps short relative names when working inside directories with spaces. | Y | Y | - | - |
+| Fix completion for paths containing apostrophes | Paths containing `'` do not break the generated `fzf` command. | Y | Y | - | - |
+| Wrap preview window for default source | Long preview lines wrap instead of needing horizontal scrolling. | - | - | Y | - |
+| Open selected man-page option at the correct line | Opening an option jumps to the exact matching line in the man page. | - | - | Y | - |
+| Limit home-directory search depth to 1 | Completing from `~` only scans the first level by default. | N | - | Y | - |
+| Store per-group `fzf` query history | Files, options, and other groups keep separate query history. | Y | - | Y | - |
+| Search ignored files too (`fd --no-ignore`) | Results include files normally hidden by ignore rules. | Y | - | Y | - |
+| Improve file completion for incomplete path strings | Partial paths like `src/mai` keep normal completion behavior instead of falling into a bad recursive search. | Y | - | Y | - |
+| Show hidden files via `fifc_show_hidden=true` | Opt-in dotfile visibility in normal completion results. | Y | - | - | Y |
+| Case-insensitive matching via `fifc_case_insensitive=true` | Opt-in case-insensitive matching inside `fzf`. | Y | - | - | Y |
+| `Tab` / `Shift-Tab` navigate entries inside fzf | `Tab` keys move selection instead of acting as the old multi-select key. | Y | - | Y | Y |
+| Configurable multi-select key instead of Tab | Multi-select moves off `Tab` and can be reassigned. | - | - | - | Y |
+| Interactive depth controls for file/directory search | Search depth can be changed live from inside the picker. | - | - | - | Y |
+| Vertical directory preview with optional custom command | Directory preview becomes a one-entry-per-line list and can be overridden. | - | - | - | Y |
+| Better matching when completing inside an already-typed directory path | Typed directory prefix becomes search scope instead of part of the exact match text. | Y | - | - | Y |
 
 ### Fork overlay by fork
 

@@ -1,6 +1,6 @@
 <div align="center">
 
-# fifc 🐠
+# fifc
 
 _fish fzf completions_
 
@@ -8,35 +8,95 @@ _fish fzf completions_
 
 fifc brings fzf powers on top of fish completion engine and allows customizable completion rules
 
-**Fork of [gazorby/fifc](https://github.com/gazorby/fifc) with additional features and customizations**
+Fork of [gazorby/fifc](https://github.com/gazorby/fifc) with additional features and customizations
 
 </div>
 
-![gif usage](../assets/demo.gif)
+![gif usage](assets/demo.gif)
 
-## ✅ Requirements
+## Requirements
 
 - [fish](https://github.com/fish-shell/fish-shell) 3.4.0+
+- [bat](https://github.com/sharkdp/bat) or `cat`
+- [chafa](https://github.com/hpjansson/chafa) or `file`
+- [hexyl](https://github.com/sharkdp/hexyl) or `file`
+- [fd](https://github.com/sharkdp/fd) or `find`
+- [eza](https://github.com/eza-community/eza), [exa](https://github.com/ogham/exa), or `ls`
+- [ripgrep](https://github.com/BurntSushi/ripgrep) or `pcregrep`
+- [procs](https://github.com/dalance/procs) or `ps`
+- [broot](https://github.com/Canop/broot)
 
-## ✨ Features
+## Features
 
-- Preview/open any file: text, image, gif, pdf, archive, binary (using external tools)
+- Preview/open any file: text with [bat](https://github.com/sharkdp/bat) or `cat`; images, gifs, pdfs, and archives with [chafa](https://github.com/hpjansson/chafa) or `file`; binaries with [hexyl](https://github.com/sharkdp/hexyl) or `file`
 - Preview/open command's man page
 - Preview/open function definitions
 - Preview/open full option description when completing commands
-- Recursively search for files and folders when completing paths (using [fd](https://github.com/sharkdp/fd))
-- Preview directory content
-- Preview process trees (using [procs](https://github.com/dalance/procs))
+- Recursively search for files and folders when completing paths (using [fd](https://github.com/sharkdp/fd) or `find`)
+- Preview directory content with [eza](https://github.com/eza-community/eza), [exa](https://github.com/ogham/exa), or `ls`
+- Preview process trees (using [procs](https://github.com/dalance/procs) or `ps`)
+- `Tab` and `Shift-Tab` navigation inside the `fzf` picker
+- Reapply bindings automatically when `fish_key_bindings` changes
 - Modular: easily add your own completion rules
 - Properly handle paths with spaces (needs fish 3.4+)
 
-## 🚀 Install
+## Install
+
+### Using Fisher
+
+Remember to install the requirements listed above.
 
 ```fish
 fisher install adam01110/fifc
 ```
 
-## 🔧 Usage
+### Using Nix
+
+This repository's flake now exposes the plugin directly, so you can choose either this flake or the package from my NUR repo.
+
+#### Directly from this flake
+
+Remember to install the requirements listed above.
+
+```nix
+{
+  inputs.fifc.url = "github:adam01110/fifc";
+
+  outputs = {nixpkgs, fifc, ...}: {
+    homeConfigurations.me = let
+      system = "x86_64-linux";
+      pkgs = import nixpkgs {inherit system;};
+    in
+      {
+        programs.fish.plugins = [
+          {
+            name = "fifc";
+            src = fifc.packages.${system}.default;
+          }
+        ];
+      };
+  };
+}
+```
+
+#### From NUR
+
+Install NUR first: <https://github.com/nix-community/NUR#installation>
+
+Remember to install the requirements listed above.
+
+```nix
+{
+  programs.fish.plugins = [
+    {
+      name = "fifc";
+      src = nur.repos.adam01110.fishPlugins.fifc;
+    }
+  ];
+}
+```
+
+## Usage
 
 You only need to set one setting after install:
 
@@ -70,13 +130,13 @@ fifc can use modern tools if available:
 
 | Prefer                                           | Fallback to | Used for                                  | Custom options                            |
 | ------------------------------------------------ | ----------- | ----------------------------------------- | ----------------------------------------- |
-| [bat](https://github.com/sharkdp/bat)            | cat         | Preview files                             | `$fifc_bat_opts`                          |
-| [chafa](https://github.com/hpjansson/chafa)      | file        | Preview images, gif, pdf etc              | `$fifc_chafa_opts`                        |
-| [hexyl](https://github.com/sharkdp/hexyl)        | file        | Preview binaries                          | `$fifc_hexyl_opts`                        |
-| [fd](https://github.com/sharkdp/fd)              | find        | Complete paths                            | `$fifc_fd_opts`                           |
-| [eza](https://github.com/eza-community/eza)      | exa, ls     | Preview directories                       | `$fifc_eza_opts`, `$fifc_exa_opts`, `$fifc_ls_opts` |
-| [ripgrep](https://github.com/BurntSushi/ripgrep) | pcregrep    | Search options in man pages               | -                                         |
-| [procs](https://github.com/dalance/procs)        | ps          | Complete processes and preview their tree | `$fifc_procs_opts`                        |
+| [bat](https://github.com/sharkdp/bat)            | `cat`       | Preview files                             | `$fifc_bat_opts`                          |
+| [chafa](https://github.com/hpjansson/chafa)      | `file`      | Preview images, gif, pdf etc              | `$fifc_chafa_opts`                        |
+| [hexyl](https://github.com/sharkdp/hexyl)        | `file`      | Preview binaries                          | `$fifc_hexyl_opts`                        |
+| [fd](https://github.com/sharkdp/fd)              | `find`      | Complete paths                            | `$fifc_fd_opts`                           |
+| [eza](https://github.com/eza-community/eza)      | `exa`, `ls` | Preview directories                       | `$fifc_eza_opts`, `$fifc_exa_opts`, `$fifc_ls_opts` |
+| [ripgrep](https://github.com/BurntSushi/ripgrep) | `pcregrep`  | Search options in man pages               | -                                         |
+| [procs](https://github.com/dalance/procs)        | `ps`        | Complete processes and preview their tree | `$fifc_procs_opts`                        |
 | [broot](https://github.com/Canop/broot)          | -           | Explore directory trees                   | `$fifc_broot_opts`                        |
 
 Custom options can be added for any of the commands used by fifc using the variable mentioned in the above table.
@@ -87,29 +147,19 @@ Show line number when previewing files:
 
 - `set -U fifc_bat_opts --style=numbers`
 
+Don't use quotes in variables, set them as a list: `set -U fifc_eza_opts --icons --tree`
+
 Show hidden files by default:
 
 - `set -U fifc_show_hidden true`
 
-⚠️ Don't use quotes in variables, set them as a list: `set -U fifc_eza_opts --icons --tree`
+Enable case-insensitive completion matching:
 
-**Case-insensitive completion matching:**
-
-```fish
-set -U fifc_case_insensitive true
-```
+- `set -U fifc_case_insensitive true`
 
 When enabled, fzf will perform case-insensitive matching for all completions. This is particularly useful for `cd` and file path completions where you don't want to worry about exact case matching.
 
-**Hidden-file completion:**
-
-```fish
-set -U fifc_show_hidden true
-```
-
-When enabled, hidden files and directories (starting with `.`) are shown in completions without needing to type `.` first.
-
-## 🛠️ Write your own rules
+## Write your own rules
 
 Custom rules can easily be added using the `fifc` command. Actually, all builtin rules are added this way: see [conf.d/fifc.fish](https://github.com/gazorby/fifc/blob/52ff966511ea97ed7be79db469fe178784e22fd8/conf.d/fifc.fish)
 
@@ -211,7 +261,7 @@ fifc \
     -p 'pacman -Si "$fifc_extracted"'
 ```
 
-![gif usage](../assets/pacman.gif)
+![gif usage](assets/pacman.gif)
 
 Search patterns in files and preview matches when commandline starts with `**<pattern>` (using [ripgrep](https://github.com/burntsushi/ripgrep) and [batgrep](https://github.com/eth-p/bat-extras/blob/master/doc/batgrep.md#bat-extras-batgrep)):
 
@@ -225,16 +275,14 @@ fifc \
     -O 1
 ```
 
-![gif usage](../assets/batgrep.gif)
+![gif usage](assets/batgrep.gif)
 
-## ❤️ Credits
+## Credits
 
 Thanks [PatrickF1](https://github.com/PatrickF1) (and collaborators!), for the great [fzf.fish](https://github.com/PatrickF1/fzf.fish) plugin which inspired me for the command-based configuration, and from which I copied the ci workflow.
 
-## 📝 License
+This is a fork of [gazorby/fifc](https://github.com/gazorby/fifc). All credit for the original implementation goes to the original author and contributors.
+
+## License
 
 [MIT](https://github.com/adam01110/fifc/blob/main/LICENSE)
-
-## 🔗 Original Project
-
-This is a fork of [gazorby/fifc](https://github.com/gazorby/fifc). All credit for the original implementation goes to the original author and contributors.
