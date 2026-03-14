@@ -28,7 +28,7 @@ Legend:
 
 | Item | What it gives you | Notes |
 | --- | --- | --- |
-| `adam01110/fifc` | Exact PR `#49`, exact PR `#52`, exact PR `#54`, and exact PR `#60`; `#49` already includes the PR `#61` behavior | Current fork state: custom rm command, custom fzf opts, preserved directory search opts, eza-first directory preview, fixed escaped query handling, optional hidden-file display, optional case-insensitive matching, no forced extra Tab bind, binding reapplication when `fish_key_bindings` changes, correct short-name display when the current path contains spaces, apostrophe-safe path completion, improved incomplete-path file completion, and better typed-directory-path matching |
+| `adam01110/fifc` | Exact PR `#49`, exact PR `#52`, exact PR `#54`, and exact PR `#60`; `#49` already includes the PR `#61` behavior | Current fork state: custom rm command, custom fzf opts, preserved directory search opts, eza-first directory preview, fixed escaped query handling, per-group `fzf` query history, optional hidden-file display, optional case-insensitive matching, no forced extra Tab bind, binding reapplication when `fish_key_bindings` changes, correct short-name display when the current path contains spaces, apostrophe-safe path completion, improved incomplete-path file completion, and better typed-directory-path matching |
 | `justbispo/fifc` | Most of PR `#49`, exact `#52`, exact `#60`, equivalent `#61`, plus extra bug fixes | Best fork if the goal is "bundle several existing PR/fork fixes" |
 | `thalesmello/fifc` | Independent UX and completion behavior changes | Does not really aggregate the open PRs |
 | `schmas/fifc` | Larger UX redesign: hidden files, case-insensitive mode, depth controls, preview changes | Only approximate overlap with `#52` and `#54` |
@@ -50,7 +50,7 @@ Legend:
 
 | Fork | Ahead commits | Exact PR coverage | Approximate/shared changes | Not included |
 | --- | --- | --- | --- | --- |
-| `adam01110/fifc` | 11 | `#49`, `#52`, `#54`, `#60` | `#61` equivalent via `#49` behavior; also includes the fork-only binding persistence fix, path-with-spaces display fix, apostrophe-safe completion fix, incomplete-path file completion fix, hidden-file display, case-insensitive matching, and typed-directory matching fix | `#36` |
+| `adam01110/fifc` | 14 | `#49`, `#52`, `#54`, `#60` | `#61` equivalent via `#49` behavior; also includes the fork-only binding persistence fix, working custom `fzf` options, path-with-spaces display fix, apostrophe-safe completion fix, incomplete-path file completion fix, per-group `fzf` query history, hidden-file display, case-insensitive matching, and typed-directory matching fix | `#36` |
 | `justbispo/fifc` | 11 | `#49`, `#52`, `#60` | `#61` equivalent via `#49` behavior | `#36`, `#54` |
 | `thalesmello/fifc` | 5 | - | No exact PR carry; only loose UX theme overlap with `#61` because Tab behavior changes inside fzf | `#36`, `#49`, `#52`, `#54`, `#60`, `#61` |
 | `schmas/fifc` | 20 | - | `#52` approximate; `#54` approximate | `#36`, `#49`, `#60`, `#61` |
@@ -71,49 +71,68 @@ Legend:
 
 ### Fork-only features
 
-| Feature | adam01110 | justbispo | thalesmello | schmas |
-| --- | --- | --- | --- | --- |
-| Reapply bindings when `fish_key_bindings` changes | Y | Y | - | - |
-| Fix path display when current path contains spaces | Y | Y | - | - |
-| Fix completion for paths containing apostrophes | Y | Y | - | - |
-| Wrap preview window for default source | - | - | Y | - |
-| Open selected man-page option at the correct line | - | - | Y | - |
-| Limit home-directory search depth to 1 | - | - | Y | - |
-| Store per-group `fzf` query history | - | - | Y | - |
-| Search ignored files too (`fd --no-ignore`) | - | - | Y | - |
-| Improve file completion for incomplete path strings | Y | - | Y | - |
-| Show hidden files via `fifc_show_hidden=true` | Y | - | - | Y |
-| Case-insensitive matching via `fifc_case_insensitive=true` | Y | - | - | Y |
-| `Tab` / `Shift-Tab` navigate entries inside fzf | - | - | Y | Y |
-| Configurable multi-select key instead of Tab | - | - | - | Y |
-| Interactive depth controls for file/directory search | - | - | - | Y |
-| Vertical directory preview with optional custom command | - | - | - | Y |
-| Better matching when completing inside an already-typed directory path | Y | - | - | Y |
+This is the fork overlay for features that are not coming from the open PR list.
+
+| Feature | Meaning in practice | adam01110 | justbispo | thalesmello | schmas |
+| --- | --- | --- | --- | --- | --- |
+| Reapply bindings when `fish_key_bindings` changes | FIFC keybinding survives switching Fish keymaps. | Yes | Yes | - | - |
+| Actually pass configured `fifc_custom_fzf_opts` to `fzf` | User-defined extra `fzf` flags are really appended instead of being silently ignored. | Yes | Yes | - | - |
+| Fix path display when current path contains spaces | Keeps short relative names when working inside directories with spaces. | Yes | Yes | - | - |
+| Fix completion for paths containing apostrophes | Paths containing `'` do not break the generated `fzf` command. | Yes | Yes | - | - |
+| Wrap preview window for default source | Long preview lines wrap instead of needing horizontal scrolling. | - | - | Yes | - |
+| Open selected man-page option at the correct line | Opening an option jumps to the exact matching line in the man page. | - | - | Yes | - |
+| Limit home-directory search depth to 1 | Completing from `~` only scans the first level by default. | - | - | Yes | - |
+| Store per-group `fzf` query history | Files, options, and other groups keep separate query history. | Yes | - | Yes | - |
+| Search ignored files too (`fd --no-ignore`) | Results include files normally hidden by ignore rules. | - | - | Yes | - |
+| Improve file completion for incomplete path strings | Partial paths like `src/mai` keep normal completion behavior instead of falling into a bad recursive search. | Yes | - | Yes | - |
+| Show hidden files via `fifc_show_hidden=true` | Opt-in dotfile visibility in normal completion results. | Yes | - | - | Yes |
+| Case-insensitive matching via `fifc_case_insensitive=true` | Opt-in case-insensitive matching inside `fzf`. | Yes | - | - | Yes |
+| `Tab` / `Shift-Tab` navigate entries inside fzf | `Tab` keys move selection instead of acting as the old multi-select key. | - | - | Yes | Yes |
+| Configurable multi-select key instead of Tab | Multi-select moves off `Tab` and can be reassigned. | - | - | - | Yes |
+| Interactive depth controls for file/directory search | Search depth can be changed live from inside the picker. | - | - | - | Yes |
+| Vertical directory preview with optional custom command | Directory preview becomes a one-entry-per-line list and can be overridden. | - | - | - | Yes |
+| Better matching when completing inside an already-typed directory path | Typed directory prefix becomes search scope instead of part of the exact match text. | Yes | - | - | Yes |
+
+### Fork overlay by fork
+
+| Fork | Fork-only feature set |
+| --- | --- |
+| `adam01110/fifc` | Binding persistence, working custom `fzf` opts, spaces-safe path display, apostrophe-safe completion, incomplete-path completion, per-group history, hidden-file mode, case-insensitive mode, typed-directory matching. |
+| `justbispo/fifc` | Binding persistence, working custom `fzf` opts, spaces-safe path display, apostrophe-safe completion. |
+| `thalesmello/fifc` | Wrapped preview, exact man-page jump, shallow `~` search, per-group history, ignored-file search, `Tab` / `Shift-Tab` navigation, incomplete-path completion. |
+| `schmas/fifc` | Hidden-file mode, case-insensitive mode, `Tab` / `Shift-Tab` navigation, configurable multi-select key, interactive depth controls, vertical directory preview, typed-directory matching. |
 
 ## Fork details
+
+### `adam01110/fifc`
+
+Net effect:
+- Exact PR bundle (`#49`, `#52`, `#54`, `#60`) plus several extra completion fixes that mainly remove edge-case breakage.
+- The fork-only changes are not a UI redesign; they make existing completion behavior survive more shell states and more path shapes.
+
+What the fork-only features actually do:
+- Binding persistence: when Fish switches keymaps by changing `fish_key_bindings` (for example after enabling vi bindings), FIFC now re-runs its bind setup automatically. Before this, the configured FIFC key could disappear until a new shell was opened.
+- Custom `fzf` flags really apply: `functions/_fifc.fish` now passes `$fifc_custom_fzf_opts` into the `fzf` command line, so user-supplied extra flags are not silently dropped.
+- Paths with spaces display correctly: file completion now compares the current directory against the raw path instead of an already shell-escaped one. Before this, working inside a directory whose name contained spaces could make FIFC show long/full paths where short relative names were expected.
+- Apostrophe-safe completion: the typed query is now escaped correctly before being passed to `fzf`. Before this, names containing `'` could break quoting and abort completion.
+- Incomplete path completion: if the user has typed only part of a path segment such as `src/mai`, FIFC now falls back to Fish's parsed completion list instead of trying to recursively search under a non-directory prefix. That restores useful completions for partially typed paths.
+- Per-group `fzf` query history: FIFC now stores query history in separate files per completion group such as files, directories, or options, so history from one picker type does not pollute another.
+- Hidden-file mode: `set -U fifc_show_hidden true` makes FIFC include dotfiles and hidden directories in normal search results instead of only showing them when the typed path itself already starts with `.`.
+- Case-insensitive mode: `set -U fifc_case_insensitive true` adds `fzf -i`, so matching no longer depends on letter case.
+- Better typed-directory matching: when the token already includes a directory prefix like `foo/bar/ba`, FIFC now treats `foo/bar/` as search scope and matches only on the remaining leaf text. Before this, the whole prefix stayed in the exact `fzf` query and could block matches inside that directory.
 
 ### `justbispo/fifc`
 
 Net effect:
 - Closest thing to a "merge the good open PRs" fork.
 - Contains PR `#49`, PR `#52`, PR `#60`, and the PR `#61` behavior.
-- Adds three extra fixes not present in the open PR list: binding persistence, spaces in path display, and apostrophe-safe completion.
+- Adds four extra fixes not present in the open PR list: binding persistence, custom `fzf` flags actually being forwarded, spaces in path display, and apostrophe-safe completion.
 
-Commit-by-commit:
-
-| Commit | Status | Summary |
-| --- | --- | --- |
-| `d7a44c1` | active | Exact PR `#52`: preserves existing `fifc_fd_opts` / `fifc_find_opts` when directory completion adds directory-only filters. |
-| `90421f8` | active | First PR `#49` commit: adds `fifc_rm_cmd`, adds `fifc_custom_fzf_opts`, and removes the forced extra Tab binding. |
-| `235aace` | active | Second PR `#49` commit: adjusts `_fifc_action` handling around custom `fzf` options; this is the PR `#49` head commit. |
-| `030b7fa` | active | Exact PR `#60`: fixes escaped `fzf` query handling with `string unescape`. |
-| `f8f9aca` | merge-only | Merge of an external branch carrying the same PR `#49` behavior already listed above. |
-| `8fdbc31` | merge-only | Merge of the same query-escaping fix already present in `030b7fa`. |
-| `e70150d` | active | Reapplies fifc bindings when `fish_key_bindings` changes, fixing binding persistence across fish keymap changes. |
-| `06895ff` | merge-only | Merge of the same directory-option preservation already present in `d7a44c1`. |
-| `051febd` | active | Fixes the variable name so configured custom `fzf` options are actually passed through. |
-| `caf694e` | active | Fixes file/directory display when the current path contains spaces, avoiding full-path output where short names are expected. |
-| `b3f5886` | active | Fixes completion for directory names containing `'`, preventing unbalanced-quote failures. |
+What the fork-only features actually do:
+- Binding persistence: moves FIFC binding setup into a function that also runs when `fish_key_bindings` changes, so switching between Fish keymaps does not drop the FIFC keybinding.
+- Custom `fzf` flags really apply: fixes the variable name used when building the `fzf` command. Before this, `fifc_custom_fzf_opts` existed but user-supplied extra flags were silently ignored.
+- Paths with spaces display correctly: separates raw-path checks from shell-escaped command output, so FIFC still recognizes `$PWD` correctly when directory names contain spaces and keeps showing short relative names.
+- Apostrophe-safe completion: escapes the query safely before passing it to `fzf`, preventing unbalanced-quote failures when paths contain `'`.
 
 ### `thalesmello/fifc`
 
@@ -121,15 +140,13 @@ Net effect:
 - Independent UX/completion stack, not a bundle of the existing open PRs.
 - No exact PR carry from `#36`, `#49`, `#52`, `#54`, `#60`, or `#61`.
 
-Commit-by-commit:
-
-| Commit | Status | Summary |
-| --- | --- | --- |
-| `d74393b` | active | Wraps the default-source preview window so long preview lines do not require horizontal scrolling. |
-| `0861074` | active | Makes opening a selected man-page option jump directly to the correct line instead of using less reliable regex searching. |
-| `2c99638` | active | Limits searches rooted at `$HOME` to depth 1, reducing recursion and result volume for home-directory completion. |
-| `6f1096c` | active | Changes the interaction model: single-select picker, `Tab` / `Shift-Tab` move selection, per-group history files, and `fd --no-ignore` for file search. |
-| `8910243` | active | Improves file completion for incomplete path strings and tightens directory detection and plain-style file previews. |
+What the fork-only features actually do:
+- Wrapped preview: the generic/default preview pane uses `--preview-window wrap`, so long lines wrap inside the preview instead of forcing horizontal scrolling.
+- Correct man-page jump: when FIFC opens a selected CLI option from a man page, it now computes the matching line number first and opens `less` at that line. This is more precise than searching by regex inside raw pager output.
+- Shallower `~` search: completions rooted directly at `$HOME` are limited to depth 1. That cuts noise and cost when completing from `~` without changing deeper searches elsewhere.
+- Single-select navigation model: inside `fzf`, `Tab` and `Shift-Tab` move the cursor instead of toggling multiselect, FIFC runs in single-select mode, and each completion group gets its own persisted query history file.
+- Search ignored files too: the `fd` path adds `--no-ignore`, so results can include files normally hidden by `.gitignore` or other ignore rules.
+- Incomplete path completion: partial path fragments are no longer treated as directory roots for recursive search, so incomplete strings keep using the regular Fish completion list until they become a real directory path.
 
 ### `schmas/fifc`
 
@@ -138,30 +155,14 @@ Net effect:
 - Final branch keeps hidden-file support, case-insensitive mode, depth controls, new preview behavior, and fzf keybinding changes.
 - Approximate overlap with PR `#52` and PR `#54`, but not exact carries.
 
-Commit-by-commit:
-
-| Commit | Status | Summary |
-| --- | --- | --- |
-| `1b165ac` | active | Adds `fifc_show_hidden=true` support and also preserves existing directory search options, which approximately covers PR `#52`. |
-| `ac913da` | superseded | Adds hidden-last sorting for file output; later sorting changes replace this implementation. |
-| `9708c44` | superseded | Simplifies the hidden-last sort pipeline; later commits replace this behavior again. |
-| `e5d7b00` | reverted | Adds an interactive git branch selector and preview UI. |
-| `f75c2ca` | revert/net-zero | Removes the git branch selector again, leaving no net git-branch feature in the final fork. |
-| `0ca852d` | active | Adds optional case-insensitive `fzf` matching controlled by `fifc_case_insensitive`. |
-| `8773786` | docs-only | Documents the new case-insensitive setting. |
-| `e7299b8` | docs-only | Adds project architecture, workflow, and Claude-related documentation. |
-| `e49b075` | active/partial | Keeps the keybinding part of the change: `Tab` / `Shift-Tab` navigation and configurable multiselect key; the early directory-sorting part is later revised. |
-| `af3205e` | chore | Adds `.gitignore` entries for local planning artifacts. |
-| `b32a63c` | superseded | Reworks depth sorting using `awk`; later depth and sorting commits replace the resulting behavior. |
-| `db3a0c6` | active | Makes multiselect toggle the current item without automatically moving to the next one. |
-| `86edc2a` | superseded | Fixes ANSI handling for the hidden/depth sort pipeline that later disappears from the final branch. |
-| `1c6d080` | active/partial | Keeps the vertical directory preview and `eza`-first behavior; the initial `--scheme=path` ranking tweak is revised later. |
-| `e054580` | active | Removes `--scheme=path` so shallow boundary matches rank more naturally. |
-| `2429282` | superseded | Adds `--no-sort` to preserve source depth order; later removed when alphabetical/natural ordering is restored. |
-| `58408e8` | active | Adds interactive search-depth control with `alt-up` / `alt-down` and default depth-limited traversal. |
-| `f8f31bc` | active | Adds `ctrl-j` / `ctrl-k` and `alt-1..9` depth shortcuts. |
-| `2b98131` | active | Fixes the `alt-1..9` bindings and restores alphabetical/natural ordering instead of the earlier custom sort pipeline. |
-| `4b305f1` | active | Clears path-prefix query text when completing inside a typed directory path, improving matching for nested directory completions. |
+What the fork-only features actually do:
+- Hidden-file mode: `set -U fifc_show_hidden true` makes file and directory completion include dotfiles by default, and the same behavior is preserved when reloading results at different search depths.
+- Case-insensitive mode: `set -U fifc_case_insensitive true` adds `fzf -i`, so case mismatches stop blocking results.
+- Picker navigation redesign: `Tab` and `Shift-Tab` move up and down inside the picker, multiselect moves to `ctrl-space` by default or `fifc_multi_keybinding`, and toggling selection no longer jumps to the next row automatically.
+- Vertical directory preview: directory preview becomes a one-entry-per-line listing, prefers `eza`, falls back to `exa` or `ls`, and can be fully replaced with `fzf_preview_dir_cmd`.
+- Natural ranking restored: removes `--scheme=path` after earlier experiments, so matching stops over-weighting full path structure and shallow/basename-style matches rank more naturally again.
+- Interactive depth controls: completion starts at depth 1, the prompt shows the current depth, `alt-up` / `alt-down` and `ctrl-j` / `ctrl-k` adjust it live, and `alt-1`..`alt-9` jump straight to a chosen depth.
+- Better typed-directory matching: once a directory prefix is already typed, FIFC clears that prefix from the active query so matching works on the remaining basename text rather than the whole path string.
 
 ## Practical merge notes
 
@@ -169,12 +170,12 @@ If the goal is to build a personal fork with the highest-value low-overlap chang
 
 1. Start with the independent open PRs: `#36`, `#52`, `#54`, `#60`.
 2. Choose `#49` or `#61`, not both; `#61` is redundant if you already take `#49` or `justbispo/fifc`.
-3. `adam01110/fifc` now also includes the `justbispo/fifc` apostrophe-safe completion fix (`b3f5886`) plus the `schmas/fifc` hidden-file option (`1b165ac`), case-insensitive matching option (`0ca852d`, `8773786`), and typed-directory matching fix (`4b305f1`), in addition to the earlier binding-persistence fix (`e70150d`) and paths-with-spaces display fix (`caf694e`).
+3. `adam01110/fifc` now also includes the `justbispo/fifc` working custom-`fzf`-options fix (`051febd`) and apostrophe-safe completion fix (`b3f5886`), the `thalesmello/fifc` per-group `fzf` history feature (`3ef1942`), plus the `schmas/fifc` hidden-file option (`1b165ac`), case-insensitive matching option (`0ca852d`, `8773786`), and typed-directory matching fix (`4b305f1`), in addition to the earlier binding-persistence fix (`e70150d`) and paths-with-spaces display fix (`caf694e`).
 4. Treat `thalesmello/fifc` and `schmas/fifc` as UX forks, not straightforward PR bundles; several of their remaining changes alter navigation, ranking, preview style, or default search scope.
 
 ## Bottom line
 
-- `adam01110/fifc` now carries exact PR `#49`, `#52`, `#54`, and `#60` behavior in one fork, plus the fork-only binding-persistence, path-with-spaces display, apostrophe-safe completion, incomplete-path file completion, optional hidden-file display, optional case-insensitive matching, and typed-directory matching fixes.
+- `adam01110/fifc` now carries exact PR `#49`, `#52`, `#54`, and `#60` behavior in one fork, plus the fork-only binding-persistence, working custom `fzf` options, path-with-spaces display, apostrophe-safe completion, incomplete-path file completion, per-group `fzf` query history, optional hidden-file display, optional case-insensitive matching, and typed-directory matching fixes.
 - `justbispo/fifc` is no longer uniquely ahead on the apostrophe-safe completion fix; its remaining distinction is the same broader PR bundle plus its own branch history.
 - PR `#36` is still unique and would need to be merged separately.
 - `thalesmello/fifc` and `schmas/fifc` are best mined selectively rather than merged wholesale.
