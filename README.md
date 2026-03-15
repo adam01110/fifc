@@ -17,6 +17,7 @@ Fork of [gazorby/fifc](https://github.com/gazorby/fifc) with additional features
 ## Requirements
 
 - [fish](https://github.com/fish-shell/fish-shell) 3.4.0+
+- [fzf](https://github.com/junegunn/fzf)
 - [bat](https://github.com/sharkdp/bat) or `cat`
 - [chafa](https://github.com/hpjansson/chafa) or `file`
 - [hexyl](https://github.com/sharkdp/hexyl) or `file`
@@ -288,3 +289,13 @@ fifc \
 Thanks [PatrickF1](https://github.com/PatrickF1) (and collaborators!), for the great [fzf.fish](https://github.com/PatrickF1/fzf.fish) plugin which inspired me for the command-based configuration, and from which I copied the ci workflow.
 
 This is a fork of [gazorby/fifc](https://github.com/gazorby/fifc). All credit for the original implementation goes to the original author and contributors.
+
+Additional features in this fork were taken or adapted from the following upstream PRs and forks:
+
+- [ollehu](https://github.com/ollehu) for [gazorby/fifc#49](https://github.com/gazorby/fifc/pull/49), which added configurable `rm`, custom `fzf` options, and custom keybinding fixes
+- [HydroH](https://github.com/HydroH) for [gazorby/fifc#52](https://github.com/gazorby/fifc/pull/52), which preserves `fifc_fd_opts` / `fifc_find_opts` in directory completion
+- [dieggsy](https://github.com/dieggsy) for [gazorby/fifc#54](https://github.com/gazorby/fifc/pull/54), which prefers `eza` in directory previews
+- [justbispo](https://github.com/justbispo) for [gazorby/fifc#60](https://github.com/gazorby/fifc/pull/60), which fixes escaped `fzf` query handling
+- [justbispo/fifc](https://github.com/justbispo/fifc) for binding persistence, path display fixes, and apostrophe-safe completion
+- [thalesmello/fifc](https://github.com/thalesmello/fifc) for ignored-file search, per-group query history, incomplete-path completion, wrapped preview support, and man-page jump fixes
+- [schmas/fifc](https://github.com/schmas/fifc) for case-insensitive matching, hidden-file mode, and typed-directory matching improvements
