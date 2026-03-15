@@ -34,7 +34,7 @@ Fork of [gazorby/fifc](https://github.com/gazorby/fifc) with additional features
 - Preview/open function definitions
 - Preview/open full option description when completing commands
 - Recursively search for files and folders when completing paths (using [fd](https://github.com/sharkdp/fd) or `find`)
-- Preview directory content with [eza](https://github.com/eza-community/eza), [exa](https://github.com/ogham/exa), or `ls`
+- Preview directory content with [eza](https://github.com/eza-community/eza), [exa](https://github.com/ogham/exa), or `ls`, using a vertical one-entry-per-line layout by default
 - Preview process trees (using [procs](https://github.com/dalance/procs) or `ps`)
 - `Tab` and `Shift-Tab` navigation inside the `fzf` picker
 - Interactive depth controls for file and directory search inside the `fzf` picker
@@ -166,6 +166,12 @@ Wrap long lines in the default preview pane:
 - `set -U fifc_wrap_default_preview true`
 
 When enabled, the generic fallback preview uses `fzf --preview-window wrap`, so long descriptions wrap instead of requiring horizontal scrolling.
+
+Override the directory preview command entirely:
+
+- `set -U fzf_preview_dir_cmd 'eza -1a --color=always --icons'`
+
+When set, FIFC uses `fzf_preview_dir_cmd` instead of its built-in directory preview command. The selected directory is passed as the final argument.
 
 Interactive depth controls for file and directory search:
 
@@ -306,4 +312,4 @@ Additional features in this fork were taken or adapted from the following upstre
 - [justbispo](https://github.com/justbispo) for [gazorby/fifc#60](https://github.com/gazorby/fifc/pull/60), which fixes escaped `fzf` query handling
 - [justbispo/fifc](https://github.com/justbispo/fifc) for binding persistence, path display fixes, and apostrophe-safe completion
 - [thalesmello/fifc](https://github.com/thalesmello/fifc) for ignored-file search, per-group query history, incomplete-path completion, wrapped preview support, and man-page jump fixes
-- [schmas/fifc](https://github.com/schmas/fifc) for case-insensitive matching, hidden-file mode, interactive depth controls, and typed-directory matching improvements
+- [schmas/fifc](https://github.com/schmas/fifc) for case-insensitive matching, hidden-file mode, interactive depth controls, vertical directory preview with custom override support, and typed-directory matching improvements
