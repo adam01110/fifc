@@ -1,4 +1,4 @@
-{...}: {
+_: {
   perSystem = {
     config,
     pkgs,
@@ -6,7 +6,7 @@
   }: let
     inherit (pkgs.lib) attrValues;
 
-    fifc = config.packages.fifc;
+    inherit (config.packages) fifc;
     commonPackages = attrValues {
       inherit fifc;
       inherit (pkgs) fish fzf man-db;
