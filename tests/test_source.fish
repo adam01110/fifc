@@ -21,6 +21,22 @@ set fifc_commandline "foo "
 set actual (_fifc_action "source")
 @test "source fallback fish suggestions" "$actual" = _fifc_parse_complist
 
+set -e _fifc_default_source_fzf_opts
+set actual_default_wrap (begin
+    set -e fifc_wrap_default_preview
+    _fifc_action "source" >/dev/null
+    echo -n "$_fifc_default_source_fzf_opts"
+end)
+@test "source fallback wrap disabled by default" "$actual_default_wrap" = ""
+
+set actual_enabled_wrap (begin
+    set -gx fifc_wrap_default_preview true
+    _fifc_action "source" >/dev/null
+    echo -n "$_fifc_default_source_fzf_opts"
+end)
+@test "source fallback wrap enabled by option" "$actual_enabled_wrap" = '--preview-window "wrap"'
+set -e fifc_wrap_default_preview
+
 set -e fifc_commandline
 set -gx _fifc_unordered_comp $curr_fifc_unordered_comp
 set -gx _fifc_unordered_comp $curr_fifc_ordered_comp

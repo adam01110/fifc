@@ -3,6 +3,7 @@ function _fifc
     set -l result
     set -Ux _fifc_extract_regex
     set -gx _fifc_complist_path (string join '' (mktemp) "_fifc")
+    set -gx _fifc_default_source_fzf_opts
     set -gx fifc_extracted
     set -gx fifc_commandline
     set -gx fifc_token (commandline --current-token)
@@ -58,6 +59,7 @@ function _fifc
             --query $fifc_safe_query \
             --history=$fifc_history_dir/fzf-history-$history_group \
             $case_flag \
+            $_fifc_default_source_fzf_opts \
             $fifc_custom_fzf_opts"
 
     set -l cmd (string join -- " | " $source_cmd $fzf_cmd)
@@ -98,6 +100,7 @@ function _fifc
     command $fifc_rm_cmd $_fifc_complist_path
     # Clean state
     set -e _fifc_extract_regex
+    set -e _fifc_default_source_fzf_opts
     set -e _fifc_complist_path
     set -e fifc_token
     set -e fifc_group

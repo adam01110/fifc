@@ -159,6 +159,12 @@ Enable case-insensitive completion matching:
 
 When enabled, fzf will perform case-insensitive matching for all completions. This is particularly useful for `cd` and file path completions where you don't want to worry about exact case matching.
 
+Wrap long lines in the default preview pane:
+
+- `set -U fifc_wrap_default_preview true`
+
+When enabled, the generic fallback preview uses `fzf --preview-window wrap`, so long descriptions wrap instead of requiring horizontal scrolling.
+
 ## Write your own rules
 
 Custom rules can easily be added using the `fifc` command. Actually, all builtin rules are added this way: see [conf.d/fifc.fish](https://github.com/gazorby/fifc/blob/52ff966511ea97ed7be79db469fe178784e22fd8/conf.d/fifc.fish)
