@@ -25,7 +25,6 @@ Fork of [gazorby/fifc](https://github.com/gazorby/fifc) with additional features
 - [eza](https://github.com/eza-community/eza), [exa](https://github.com/ogham/exa), or `ls`
 - [ripgrep](https://github.com/BurntSushi/ripgrep) or `pcregrep`
 - [procs](https://github.com/dalance/procs) or `ps`
-- [broot](https://github.com/Canop/broot)
 
 ## Features
 
@@ -138,7 +137,6 @@ fifc can use modern tools if available:
 | [eza](https://github.com/eza-community/eza)      | `exa`, `ls` | Preview directories                       | `$fifc_eza_opts`, `$fifc_exa_opts`, `$fifc_ls_opts` |
 | [ripgrep](https://github.com/BurntSushi/ripgrep) | `pcregrep`  | Search options in man pages               | -                                         |
 | [procs](https://github.com/dalance/procs)        | `ps`        | Complete processes and preview their tree | `$fifc_procs_opts`                        |
-| [broot](https://github.com/Canop/broot)          | -           | Explore directory trees                   | `$fifc_broot_opts`                        |
 
 Custom options can be added for any of the commands used by fifc using the variable mentioned in the above table.
 

@@ -85,10 +85,6 @@ if set -q _fifc_launched_by_fzf
         -p _fifc_preview_file \
         -o _fifc_open_file
     fifc \
-        -n 'test -d "$fifc_candidate"' \
-        -p _fifc_preview_dir \
-        -o _fifc_open_dir
-    fifc \
         -n 'test "$fifc_group" = processes -a (ps -p (_fifc_parse_pid "$fifc_candidate") &>/dev/null)' \
         -p _fifc_preview_process \
         -o _fifc_open_process \
