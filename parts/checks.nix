@@ -20,7 +20,7 @@
         '';
 
       tests =
-        pkgs.runCommand "fifc-tests" {
+        pkgs.runCommand "fzfish-tests" {
           nativeBuildInputs = with pkgs; [
             bat
             coreutils
@@ -59,7 +59,7 @@
           ln -s ${pkgs.fishPlugins.fishtape}/share/fish/vendor_functions.d/*.fish "$XDG_DATA_HOME/fish/vendor_functions.d/"
 
           cd source
-          fish -c '_fifc_set_bindings'
+          fish -c 'source "$XDG_CONFIG_HOME/fish/conf.d/fzfish.fish"; _fzfish_set_bindings'
           fish -c 'fishtape tests/*.fish'
 
           touch "$out"

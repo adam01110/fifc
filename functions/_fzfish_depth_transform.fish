@@ -1,4 +1,4 @@
-function _fifc_depth_transform -d "Emit fzf actions to change depth level"
+function _fzfish_depth_transform -d "Emit fzf actions to change depth level"
     set -l delta $argv[1]
     set -l type $argv[2]
 
@@ -21,8 +21,8 @@ function _fifc_depth_transform -d "Emit fzf actions to change depth level"
 
     # Emit fzf actions: update prompt + reload with new depth
     if test -n "$type"
-        echo "change-prompt(d:$new_depth> )+reload(_fifc_reload_depth $new_depth $type)"
+        echo "change-prompt(d:$new_depth> )+reload(_fzfish_reload_depth $new_depth $type)"
     else
-        echo "change-prompt(d:$new_depth> )+reload(_fifc_reload_depth $new_depth)"
+        echo "change-prompt(d:$new_depth> )+reload(_fzfish_reload_depth $new_depth)"
     end
 end

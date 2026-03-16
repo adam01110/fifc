@@ -19,15 +19,15 @@ function ps
     return 0
 end
 
-set fifc_commandline "pkill "
-set fifc_candidate fish
+set fzfish_commandline "pkill "
+set fzfish_candidate fish
 
-set actual (_fifc_preview_process)
+set actual (_fzfish_preview_process)
 @test "preview process resolves pkill names with procs" "$actual" = "procs:--color=always --tree 101 202"
 
 functions -e type
 functions -e pgrep
 functions -e procs
 functions -e ps
-set -e fifc_commandline
-set -e fifc_candidate
+set -e fzfish_commandline
+set -e fzfish_candidate

@@ -1,8 +1,8 @@
-function _fifc_completion_group -d "Determine completion group"
-    set -l path_candidate (_fifc_path_to_complete)
+function _fzfish_completion_group -d "Determine completion group"
+    set -l path_candidate (_fzfish_path_to_complete)
     # Null means that either $path is empty or is not a directory
     set -l is_null (ls -A -- $path_candidate 2> /dev/null | string collect)
-    set -l complist (string escape -- (_fifc_expand_tilde (_fifc_parse_complist)))
+    set -l complist (string escape -- (_fzfish_expand_tilde (_fzfish_parse_complist)))
     # Directories
     set dir_test "test "(string join -- " -a " "-d "$complist)
     if test -n "$is_null"; and eval "$dir_test"
@@ -12,8 +12,8 @@ function _fifc_completion_group -d "Determine completion group"
     else if test -n "$is_null"; and echo $complist | xargs ls -d -- &>/dev/null
         echo files
         # Options
-    else if string match --regex --quiet -- '\h+\-+\h*$' $fifc_commandline
-        set -e fifc_query
+    else if string match --regex --quiet -- '\h+\-+\h*$' $fzfish_commandline
+        set -e fzfish_query
         echo options
         # PIDs
     else if string join -- '' $complist | string match --regex --quiet '^[0-9]+$'

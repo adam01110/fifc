@@ -1,51 +1,51 @@
-function _fifc
+function _fzfish
     set -f --export SHELL (command --search fish)
     set -l result
-    set -Ux _fifc_extract_regex
-    set -gx _fifc_complist_path (string join '' (mktemp) "_fifc")
-    set -gx _fifc_default_source_fzf_opts
-    set -gx fifc_extracted
-    set -gx fifc_commandline
-    set -gx fifc_token (commandline --current-token)
-    set -gx fifc_query "$fifc_token"
+    set -Ux _fzfish_extract_regex
+    set -gx _fzfish_complist_path (string join '' (mktemp) "_fzfish")
+    set -gx _fzfish_default_source_fzf_opts
+    set -gx fzfish_extracted
+    set -gx fzfish_commandline
+    set -gx fzfish_token (commandline --current-token)
+    set -gx fzfish_query "$fzfish_token"
 
     # Get commandline buffer
     if test "$argv" = ""
-        set fifc_commandline (commandline --cut-at-cursor)
+        set fzfish_commandline (commandline --cut-at-cursor)
     else
-        set fifc_commandline $argv
+        set fzfish_commandline $argv
     end
 
-    if _fifc_test_version "$FISH_VERSION" -ge "3.4"
+    if _fzfish_test_version "$FISH_VERSION" -ge "3.4"
         set complete_opts --escape
     end
 
-    complete -C $complete_opts -- "$fifc_commandline" | string split '\n' >$_fifc_complist_path
+    complete -C $complete_opts -- "$fzfish_commandline" | string split '\n' >$_fzfish_complist_path
 
-    set -gx fifc_group (_fifc_completion_group)
-    set source_cmd (_fifc_action source)
+    set -gx fzfish_group (_fzfish_completion_group)
+    set source_cmd (_fzfish_action source)
 
-    set fifc_safe_query (string unescape -- "$fifc_query" | string escape --style=script)
+    set fzfish_safe_query (string unescape -- "$fzfish_query" | string escape --style=script)
 
     # Add case-insensitive flag if configured
     set -l case_flag
-    if set -q fifc_case_insensitive; and test "$fifc_case_insensitive" = true
+    if set -q fzfish_case_insensitive; and test "$fzfish_case_insensitive" = true
         set case_flag -i
     end
 
-    set -l fifc_history_dir "$HOME/.local/share/fifc"
-    mkdir -p "$fifc_history_dir"
+    set -l fzfish_history_dir "$HOME/.local/share/fzfish"
+    mkdir -p "$fzfish_history_dir"
 
-    set -l history_group "$fifc_group"
+    set -l history_group "$fzfish_group"
     if test -z "$history_group"
         set history_group default
     end
 
-    set -l fzf_output_path (string join '' (mktemp) "_fifc_out")
+    set -l fzf_output_path (string join '' (mktemp) "_fzfish_out")
     set -l source_output_path
 
     set -l fzf_cmd "
-        _fifc_launched_by_fzf=1 SHELL=fish fzf \
+        _fzfish_launched_by_fzf=1 SHELL=fish fzf \
             -d \t \
             --exact \
             --tiebreak=length \
@@ -56,16 +56,16 @@ function _fifc
             --multi \
             --reverse \
             --header '$header' \
-            --preview '_fifc_action preview {} {q}' \
-            --bind='$fifc_open_keybinding:execute(_fifc_action open {} {q} &> /dev/tty)' \
-            --query $fifc_safe_query \
-            --history=$fifc_history_dir/fzf-history-$history_group \
+            --preview '_fzfish_action preview {} {q}' \
+            --bind='$fzfish_open_keybinding:execute(_fzfish_action open {} {q} &> /dev/tty)' \
+            --query $fzfish_safe_query \
+            --history=$fzfish_history_dir/fzf-history-$history_group \
             $case_flag \
-            $_fifc_default_source_fzf_opts \
-            $fifc_custom_fzf_opts"
+            $_fzfish_default_source_fzf_opts \
+            $fzfish_custom_fzf_opts"
 
     if command tail --pid=$fish_pid -n 0 /dev/null >/dev/null 2>/dev/null
-        set -l source_output_path (string join '' (mktemp) "_fifc_source")
+        set -l source_output_path (string join '' (mktemp) "_fzfish_source")
         command touch $source_output_path
 
         fish -c "$source_cmd" >$source_output_path &
@@ -93,8 +93,8 @@ function _fifc
             set -a result (string escape --no-quoted -- $token)
         end
         # Perform extraction if needed
-        if test -n "$_fifc_extract_regex"
-            set result[-1] (string match --regex --groups-only -- "$_fifc_extract_regex" "$token")
+        if test -n "$_fzfish_extract_regex"
+            set result[-1] (string match --regex --groups-only -- "$_fzfish_extract_regex" "$token")
         end
     end <$fzf_output_path
 
@@ -103,9 +103,9 @@ function _fifc
     # - Result is not a directory
     # We need to unescape $result for directory test as we escaped it before
     if test (count $result) -eq 1
-        set -l result_path (_fifc_expand_tilde (string unescape -- $result[1]))
+        set -l result_path (_fzfish_expand_tilde (string unescape -- $result[1]))
         if not test -d "$result_path"
-            set -l buffer (string split -- "$fifc_commandline" (commandline -b))
+            set -l buffer (string split -- "$fzfish_commandline" (commandline -b))
             if not string match -- ' *' "$buffer[2]"
                 set -a result ''
             end
@@ -118,16 +118,16 @@ function _fifc
 
     commandline --function repaint
 
-    command $fifc_rm_cmd $_fifc_complist_path
-    command $fifc_rm_cmd $fzf_output_path $source_output_path 2>/dev/null
+    command $fzfish_rm_cmd $_fzfish_complist_path
+    command $fzfish_rm_cmd $fzf_output_path $source_output_path 2>/dev/null
     # Clean state
-    set -e _fifc_extract_regex
-    set -e _fifc_default_source_fzf_opts
-    set -e _fifc_complist_path
-    set -e fifc_token
-    set -e fifc_group
-    set -e fifc_extracted
-    set -e fifc_candidate
-    set -e fifc_commandline
-    set -e fifc_query
+    set -e _fzfish_extract_regex
+    set -e _fzfish_default_source_fzf_opts
+    set -e _fzfish_complist_path
+    set -e fzfish_token
+    set -e fzfish_group
+    set -e fzfish_extracted
+    set -e fzfish_candidate
+    set -e fzfish_commandline
+    set -e fzfish_query
 end

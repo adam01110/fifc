@@ -1,14 +1,14 @@
 <div align="center">
 
-# fifc
+# FzFish
 
-_fish fzf completions_
+_fzf-powered fish completions_
 
-[![CI](https://github.com/adam01110/fifc/actions/workflows/ci.yml/badge.svg)](https://github.com/adam01110/fifc/actions/workflows/ci.yml)
+[![CI](https://github.com/adam01110/fzfish/actions/workflows/ci.yml/badge.svg)](https://github.com/adam01110/fzfish/actions/workflows/ci.yml)
 
-fifc brings fzf powers on top of fish completion engine and allows customizable completion rules
+FzFish brings fzf powers on top of fish completion engine and allows customizable completion rules.
 
-Fork of [gazorby/fifc](https://github.com/gazorby/fifc) with additional features and customizations
+Fork of [gazorby/fifc](https://github.com/gazorby/fifc) with additional features and customizations.
 
 </div>
 
@@ -47,8 +47,10 @@ Fork of [gazorby/fifc](https://github.com/gazorby/fifc) with additional features
 Remember to install the requirements listed above.
 
 ```fish
-fisher install adam01110/fifc
+fisher install adam01110/fzfish
 ```
+
+The command name is `fzfish`.
 
 ### Using Nix
 
@@ -60,9 +62,9 @@ Remember to install the requirements listed above.
 
 ```nix
 {
-  inputs.fifc.url = "github:adam01110/fifc";
+  inputs.fzfish.url = "github:adam01110/fzfish";
 
-  outputs = {nixpkgs, fifc, ...}: {
+  outputs = {nixpkgs, fzfish, ...}: {
     homeConfigurations.me = let
       system = "x86_64-linux";
       pkgs = import nixpkgs {inherit system;};
@@ -70,8 +72,8 @@ Remember to install the requirements listed above.
       {
         programs.fish.plugins = [
           {
-            name = "fifc";
-            src = fifc.packages.${system}.default;
+            name = "fzfish";
+            src = fzfish.packages.${system}.default;
           }
         ];
       };
@@ -89,8 +91,8 @@ Remember to install the requirements listed above.
 {
   programs.fish.plugins = [
     {
-      name = "fifc";
-      src = nur.repos.adam01110.fishPlugins.fifc;
+      name = "fzfish";
+      src = nur.repos.adam01110.fishPlugins.fzfish;
     }
   ];
 }
@@ -101,71 +103,69 @@ Remember to install the requirements listed above.
 You only need to set one setting after install:
 
 ```fish
-set -Ux fifc_editor <your-favorite-editor>
+set -Ux fzfish_editor <your-favorite-editor>
 ```
 
 And enjoy built-in completions!
 
-By default fifc override `tab`, but you can assign another keybinding:
+By default `fzfish` overrides `tab`, but you can assign another keybinding:
 
 ```fish
 # Bind fzf completions to ctrl-x
-set -U fifc_keybinding \cx
+set -U fzfish_keybinding \cx
 ```
 
-fifc will also by default use `rm` to remove temporary files, this can changed:
+`fzfish` will also by default use `rm` to remove temporary files; this can be changed:
 
 ```fish
 # Use trash instead of rm
-set -U fifc_rm_cmd trash
+set -U fzfish_rm_cmd trash
 ```
 
 To append a custom fzf command, for example to disable the `--exact` flag and increase the fuzziness:
 
 ```fish
-set -U fifc_custom_fzf_opts +e
+set -U fzfish_custom_fzf_opts +e
 ```
 
-fifc can use modern tools if available:
+`fzfish` can use modern tools if available:
 
 | Prefer                                           | Fallback to | Used for                                  | Custom options                            |
 | ------------------------------------------------ | ----------- | ----------------------------------------- | ----------------------------------------- |
-| [bat](https://github.com/sharkdp/bat)            | `cat`       | Preview files                             | `$fifc_bat_opts`                          |
-| [timg](https://github.com/hzeller/timg)          | `file`      | Preview images, gif, pdf etc              | `$fifc_timg_opts`                         |
-| [hexyl](https://github.com/sharkdp/hexyl)        | `file`      | Preview binaries                          | `$fifc_hexyl_opts`                        |
-| [fd](https://github.com/sharkdp/fd)              | `find`      | Complete paths                            | `$fifc_fd_opts`                           |
-| [eza](https://github.com/eza-community/eza)      | `exa`, `ls` | Preview directories                       | `$fifc_eza_opts`, `$fifc_exa_opts`, `$fifc_ls_opts` |
+| [bat](https://github.com/sharkdp/bat)            | `cat`       | Preview files                             | `$fzfish_bat_opts`                          |
+| [timg](https://github.com/hzeller/timg)          | `file`      | Preview images, gif, pdf etc              | `$fzfish_timg_opts`                         |
+| [hexyl](https://github.com/sharkdp/hexyl)        | `file`      | Preview binaries                          | `$fzfish_hexyl_opts`                        |
+| [fd](https://github.com/sharkdp/fd)              | `find`      | Complete paths                            | `$fzfish_fd_opts`                           |
+| [eza](https://github.com/eza-community/eza)      | `exa`, `ls` | Preview directories                       | `$fzfish_eza_opts`, `$fzfish_exa_opts`, `$fzfish_ls_opts` |
 | [ripgrep](https://github.com/BurntSushi/ripgrep) | `pcregrep`  | Search options in man pages               | -                                         |
-| [procs](https://github.com/dalance/procs)        | `ps`        | Complete processes and preview their tree | `$fifc_procs_opts`                        |
+| [procs](https://github.com/dalance/procs)        | `ps`        | Complete processes and preview their tree | `$fzfish_procs_opts`                        |
 
-Custom options can be added for any of the commands used by fifc using the variable mentioned in the above table.
+Custom options can be added for any of the commands used by `fzfish` using the variable mentioned in the above table.
 
-If `timg` falls back to block rendering in a terminal that supports a graphics protocol, force it with `fifc_timg_pixelation`:
+If `timg` falls back to block rendering in a terminal that supports a graphics protocol, force it with `fzfish_timg_pixelation`:
 
-- `set -U fifc_timg_pixelation kitty`
-- `set -U fifc_timg_pixelation sixel`
-
-Example:
+- `set -U fzfish_timg_pixelation kitty`
+- `set -U fzfish_timg_pixelation sixel`
 
 Show line number when previewing files:
 
-- `set -U fifc_bat_opts --style=numbers`
+- `set -U fzfish_bat_opts --style=numbers`
 
-Don't use quotes in variables, set them as a list: `set -U fifc_eza_opts --icons --tree`
+Don't use quotes in variables, set them as a list: `set -U fzfish_eza_opts --icons --tree`
 
 Show hidden files by default:
 
-- `set -U fifc_show_hidden true`
+- `set -U fzfish_show_hidden true`
 
 Enable case-insensitive completion matching:
 
-- `set -U fifc_case_insensitive true`
+- `set -U fzfish_case_insensitive true`
 
 When enabled, fzf will perform case-insensitive matching for all completions. This is particularly useful for `cd` and file path completions where you don't want to worry about exact case matching.
 
 Wrap long lines in the default preview pane:
 
-- `set -U fifc_wrap_default_preview true`
+- `set -U fzfish_wrap_default_preview true`
 
 When enabled, the generic fallback preview uses `fzf --preview-window wrap`, so long descriptions wrap instead of requiring horizontal scrolling.
 
@@ -173,7 +173,7 @@ Override the directory preview command entirely:
 
 - `set -U fzf_preview_dir_cmd 'eza -1a --color=always --icons'`
 
-When set, FIFC uses `fzf_preview_dir_cmd` instead of its built-in directory preview command. The selected directory is passed as the final argument.
+When set, FZFISH uses `fzf_preview_dir_cmd` instead of its built-in directory preview command. The selected directory is passed as the final argument.
 
 Interactive depth controls for file and directory search:
 
@@ -184,9 +184,9 @@ Path search starts at depth 1, and the picker prompt shows the active depth as `
 
 ## Write your own rules
 
-Custom rules can easily be added using the `fifc` command. Actually, all builtin rules are added this way: see [conf.d/fifc.fish](https://github.com/gazorby/fifc/blob/52ff966511ea97ed7be79db469fe178784e22fd8/conf.d/fifc.fish)
+Custom rules can easily be added using the `fzfish` command. Actually, all builtin rules are added this way: see [conf.d/fzfish.fish](https://github.com/gazorby/fifc/blob/52ff966511ea97ed7be79db469fe178784e22fd8/conf.d/fifc.fish)
 
-See `fifc -h` for more details.
+See `fzfish -h` for more details.
 
 Basically, a rule allows you to trigger some commands based on specific conditions.
 
@@ -199,22 +199,22 @@ If conditions are met, you can bind custom commands:
 
 - **preview:** Command used for fzf preview
 - **source:** Command that feeds fzf input
-- **open:** Command binded to `fifc_open_keybinding` (defaults to ctrl-o)
+- **open:** Command binded to `fzfish_open_keybinding` (defaults to ctrl-o)
 
 All commands have access to the following variable describing the completion context:
 
 | Variable           | Description                                                                                        | Command availability |
 | ------------------ | -------------------------------------------------------------------------------------------------- | -------------------- |
-| `fifc_candidate`   | Currently selected item in fzf                                                                     | all except source    |
-| `fifc_commandline` | Commandline part before the cursor position                                                        | all                  |
-| `fifc_token`       | Last token from the commandline                                                                    | all                  |
-| `fifc_group`       | Group to which fish suggestions belong (possible values: directories, files, options or processes) | all                  |
-| `fifc_extracted`   | Extracted string from the currently selected item using the `extracted` regex, if any              | all except source    |
-| `fifc_query`       | fzf query. On source command, it is the initial fzf query (passed through `--query` option)        | all                  |
+| `fzfish_candidate`   | Currently selected item in fzf                                                                     | all except source    |
+| `fzfish_commandline` | Commandline part before the cursor position                                                        | all                  |
+| `fzfish_token`       | Last token from the commandline                                                                    | all                  |
+| `fzfish_group`       | Group to which fish suggestions belong (possible values: directories, files, options or processes) | all                  |
+| `fzfish_extracted`   | Extracted string from the currently selected item using the `extracted` regex, if any              | all except source    |
+| `fzfish_query`       | fzf query. On source command, it is the initial fzf query (passed through `--query` option)        | all                  |
 
-### **fifc_group** values
+### **fzfish_group** values
 
-fifc test completion items to set `fifc_group` with the following conditions:
+fzfish test completion items to set `fzfish_group` with the following conditions:
 
 | Group       | Condition                                                    |
 | ----------- | ------------------------------------------------------------ |
@@ -225,35 +225,35 @@ fifc test completion items to set `fifc_group` with the following conditions:
 
 ### Matching order
 
-By default, fifc evaluate all rules in the order in which they have been defined and stops at the first where all conditions are met.
+By default, fzfish evaluate all rules in the order in which they have been defined and stops at the first where all conditions are met.
 It does this each time it has to resolve source, preview and open commands.
 
 Take the following scenario:
 
 ```fish
 # Rule 1
-fifc -n 'test "$fifc_group" = files' -p 'bat $fifc_candidate'
+fzfish -n 'test "$fzfish_group" = files' -p 'bat $fzfish_candidate'
 # Rule 2
-fifc -n 'string match "*.json" "$fifc_candidate"' -p 'bat -l json $fifc_candidate'
+fzfish -n 'string match "*.json" "$fzfish_candidate"' -p 'bat -l json $fzfish_candidate'
 ```
 
-When completing path, `$fifc_group` will be set to "files" so the first rule will always be valid in that case, and the second one will never be reached.
+When completing path, `$fzfish_group` will be set to "files" so the first rule will always be valid in that case, and the second one will never be reached.
 
 Another example:
 
 ```fish
 # Rule 1
-fifc --condition 'test "$fifc_group" = files' --preview 'bat $fifc_candidate'
+fzfish --condition 'test "$fzfish_group" = files' --preview 'bat $fzfish_candidate'
 # Rule 2
-fifc --condition 'test "$fifc_group" = files' --source 'fd . --color=always --hidden $HOME'
+fzfish --condition 'test "$fzfish_group" = files' --source 'fd . --color=always --hidden $HOME'
 ```
 
-Here, even if both rules have the same conditions, they won't interfere because fifc has to resolve source commands _before_ the preview commands, so order doesn't matter in this case.
+Here, even if both rules have the same conditions, they won't interfere because fzfish has to resolve source commands _before_ the preview commands, so order doesn't matter in this case.
 
 ### Override builtin rules
 
-If you want to write your own rule based on the same conditions as one of the built-in ones, you can use fifc `--order` option.
-It tells fifc to evaluate the rule in a predefined order, so you can set it to 1 to make sure it will be evaluated first.
+If you want to write your own rule based on the same conditions as one of the built-in ones, you can use fzfish `--order` option.
+It tells fzfish to evaluate the rule in a predefined order, so you can set it to 1 to make sure it will be evaluated first.
 
 When omitting the `--order`, the rule will be declared unordered and will be evaluated _after_ all other ordered rules, and all other unordered rules defined before.
 
@@ -264,24 +264,24 @@ All built-in rules are unordered.
 Here is how the built-in rule for file preview/open is implemented:
 
 ```fish
-fifc \
+fzfish \
     # If selected item is a file
-    -n 'test -f "$fifc_candidate"' \
-    # bind `_fifc_preview_file` to preview command
-    -p _fifc_preview_file \
-    # and `_fifc_preview_file` when pressing ctrl-o
-    -o _fifc_open_file
+    -n 'test -f "$fzfish_candidate"' \
+    # bind `_fzfish_preview_file` to preview command
+    -p _fzfish_preview_file \
+    # and `_fzfish_preview_file` when pressing ctrl-o
+    -o _fzfish_open_file
 ```
 
 Interactively search packages in archlinux:
 
 ```fish
-fifc \
+fzfish \
     -r '^(pacman|paru)(\\h*\\-S)?\\h+' \
-    -s 'pacman --color=always -Ss "$fifc_token" | string match -r \'^[^\\h+].*\'' \
+    -s 'pacman --color=always -Ss "$fzfish_token" | string match -r \'^[^\\h+].*\'' \
     -e '.*/(.*?)\\h.*' \
     -f "--query ''" \
-    -p 'pacman -Si "$fifc_extracted"'
+    -p 'pacman -Si "$fzfish_extracted"'
 ```
 
 ![gif usage](assets/pacman.gif)
@@ -289,12 +289,12 @@ fifc \
 Search patterns in files and preview matches when commandline starts with `**<pattern>` (using [ripgrep](https://github.com/burntsushi/ripgrep) and [batgrep](https://github.com/eth-p/bat-extras/blob/master/doc/batgrep.md#bat-extras-batgrep)):
 
 ```fish
-fifc \
+fzfish \
     -r '.*\*{2}.*' \
-    -s 'rg --hidden -l --no-messages (string match -r -g \'.*\*{2}(.*)\' "$fifc_commandline")' \
-    -p 'batgrep --color --paging=never (string match -r -g \'.*\*{2}(.*)\' "$fifc_commandline") "$fifc_candidate"' \
+    -s 'rg --hidden -l --no-messages (string match -r -g \'.*\*{2}(.*)\' "$fzfish_commandline")' \
+    -p 'batgrep --color --paging=never (string match -r -g \'.*\*{2}(.*)\' "$fzfish_commandline") "$fzfish_candidate"' \
     -f "--query ''" \
-    -o 'batgrep --color (string match -r -g \'.*\*{2}(.*)\' "$fifc_commandline") "$fifc_candidate" | less -R' \
+    -o 'batgrep --color (string match -r -g \'.*\*{2}(.*)\' "$fzfish_commandline") "$fzfish_candidate" | less -R' \
     -O 1
 ```
 
@@ -304,12 +304,12 @@ fifc \
 
 Thanks [PatrickF1](https://github.com/PatrickF1) (and collaborators!), for the great [fzf.fish](https://github.com/PatrickF1/fzf.fish) plugin which inspired me for the command-based configuration, and from which I copied the ci workflow.
 
-This is a fork of [gazorby/fifc](https://github.com/gazorby/fifc). All credit for the original implementation goes to the original author and contributors.
+FzFish is a fork of [gazorby/fifc](https://github.com/gazorby/fifc). All credit for the original implementation goes to the original author and contributors.
 
 Additional features in this fork were taken or adapted from the following upstream PRs and forks:
 
 - [ollehu](https://github.com/ollehu) for [gazorby/fifc#49](https://github.com/gazorby/fifc/pull/49), which added configurable `rm`, custom `fzf` options, and custom keybinding fixes
-- [HydroH](https://github.com/HydroH) for [gazorby/fifc#52](https://github.com/gazorby/fifc/pull/52), which preserves `fifc_fd_opts` / `fifc_find_opts` in directory completion
+- [HydroH](https://github.com/HydroH) for [gazorby/fifc#52](https://github.com/gazorby/fifc/pull/52), which preserves `fzfish_fd_opts` / `fzfish_find_opts` in directory completion
 - [dieggsy](https://github.com/dieggsy) for [gazorby/fifc#54](https://github.com/gazorby/fifc/pull/54), which prefers `eza` in directory previews
 - [justbispo](https://github.com/justbispo) for [gazorby/fifc#60](https://github.com/gazorby/fifc/pull/60), which fixes escaped `fzf` query handling
 - [justbispo/fifc](https://github.com/justbispo/fifc) for binding persistence, path display fixes, and apostrophe-safe completion

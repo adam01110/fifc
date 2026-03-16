@@ -1,4 +1,4 @@
-function _fifc_test_version -d "Compare version numbers"
+function _fzfish_test_version -d "Compare version numbers"
     set -l arg_1 (string replace --regex --all '[^\d]' '' -- "$argv[1]")
     set -l arg_2 (string replace --regex --all '[^\d]' '' -- "$argv[3]")
     set -l op "$argv[2]"

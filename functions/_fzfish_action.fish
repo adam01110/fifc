@@ -1,22 +1,22 @@
-function _fifc_action
+function _fzfish_action
     # Can be either "preview", "open" or "source"
     set -l action $argv[1]
-    set -l comp $_fifc_ordered_comp $_fifc_unordered_comp
+    set -l comp $_fzfish_ordered_comp $_fzfish_unordered_comp
     set -l regex_val (string escape --style=regex -- "$argv[2]")
     # Escape '/' for sed processing
     set regex_val (string replace '/' '\/' --all "$regex_val")
 
     # Variables exposed to evaluated commands
-    set -x fifc_desc (sed -nr (printf 's/^%s[[:blank:]]+(.*)/\\\1/p' "$regex_val") $_fifc_complist_path | string trim)
-    set -x fifc_candidate "$argv[2]"
-    set -x fifc_extracted (string match --regex --groups-only -- "$_fifc_extract_regex" "$argv[2]")
+    set -x fzfish_desc (sed -nr (printf 's/^%s[[:blank:]]+(.*)/\\\1/p' "$regex_val") $_fzfish_complist_path | string trim)
+    set -x fzfish_candidate "$argv[2]"
+    set -x fzfish_extracted (string match --regex --groups-only -- "$_fzfish_extract_regex" "$argv[2]")
 
     if test "$action" = preview
         set default_preview 1
-        set fifc_query "$argv[3]"
+        set fzfish_query "$argv[3]"
 
     else if test "$action" = open
-        set fifc_query "$argv[3]"
+        set fzfish_query "$argv[3]"
 
     else if test "$action" = source
         set default_source 1
@@ -32,7 +32,7 @@ function _fifc_action
             set condition_cmd true
         end
         if test -n "$$comp_name[1][2]"
-            set -l val (string escape -- "$fifc_commandline")
+            set -l val (string escape -- "$fzfish_commandline")
             set regex_cmd "string match --regex --quiet -- '$$comp_name[1][2]' $val"
         else
             set regex_cmd true
@@ -43,7 +43,7 @@ function _fifc_action
             continue
         end
 
-        set _fifc_extract_regex "$$comp_name[1][7]"
+        set _fzfish_extract_regex "$$comp_name[1][7]"
 
         if test "$action" = preview; and test -n "$$comp_name[1][3]"
             eval $$comp_name[1][3]
@@ -66,11 +66,11 @@ function _fifc_action
     # We are in preview mode, but nothing matched
     # fallback to fish description
     if test "$default_preview" = 1
-        echo "$fifc_desc"
+        echo "$fzfish_desc"
     else if test "$default_source" = 1
-        if set -q fifc_wrap_default_preview; and test "$fifc_wrap_default_preview" = true
-            set -g _fifc_default_source_fzf_opts '--preview-window "wrap"'
+        if set -q fzfish_wrap_default_preview; and test "$fzfish_wrap_default_preview" = true
+            set -g _fzfish_default_source_fzf_opts '--preview-window "wrap"'
         end
-        echo _fifc_parse_complist
+        echo _fzfish_parse_complist
     end
 end

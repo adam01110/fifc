@@ -1,9 +1,9 @@
-function _fifc_preview_process -d "Preview process informations"
-    set -l pids (_fifc_parse_pid "$fifc_candidate")
+function _fzfish_preview_process -d "Preview process informations"
+    set -l pids (_fzfish_parse_pid "$fzfish_candidate")
 
     if test -z "$pids"
-        if string match --regex --quiet -- '(^|.*\h)pkill(\h|$)' "$fifc_commandline"
-            set pids (pgrep -- "$fifc_candidate" 2>/dev/null)
+        if string match --regex --quiet -- '(^|.*\h)pkill(\h|$)' "$fzfish_commandline"
+            set pids (pgrep -- "$fzfish_candidate" 2>/dev/null)
         end
     end
 
@@ -17,7 +17,7 @@ function _fifc_preview_process -d "Preview process informations"
     end
 
     if type -q procs
-        procs --color=always --tree $fifc_procs_opts $pids
+        procs --color=always --tree $fzfish_procs_opts $pids
     else
         set -l ps_preview_fmt (string join ',' 'pid' 'ppid=PARENT' 'user' '%cpu' 'rss=RSS_IN_KB' 'start=START_TIME' 'command')
         ps -o "$ps_preview_fmt" -p "$ps_pids" 2>/dev/null

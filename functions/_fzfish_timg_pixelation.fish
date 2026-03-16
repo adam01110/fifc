@@ -1,6 +1,6 @@
-function _fifc_timg_pixelation -d "Choose the timg pixelation mode"
-    if set -q fifc_timg_pixelation
-        set -l requested_mode (string lower -- "$fifc_timg_pixelation[1]")
+function _fzfish_timg_pixelation -d "Choose the timg pixelation mode"
+    if set -q fzfish_timg_pixelation
+        set -l requested_mode (string lower -- "$fzfish_timg_pixelation[1]")
 
         switch $requested_mode
             case kitty k

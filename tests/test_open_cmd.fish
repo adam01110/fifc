@@ -1,6 +1,6 @@
-set fifc_candidate mkdir
-set fifc_bat_opts '--color=never'
+set fzfish_candidate mkdir
+set fzfish_bat_opts '--color=never'
 
-set actual (_fifc_open_cmd)
+set actual (_fzfish_open_cmd)
 set expected (man mkdir)
 @test "builtin cmd open" "$actual" = "$expected"

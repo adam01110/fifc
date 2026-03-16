@@ -2,9 +2,9 @@ set -g _mock_buffer 'kill '
 set -g _mock_current_token ''
 set -g _mock_group processes
 set -g _mock_tmpfile "$PWD/tests/_tmp_main_command_process_extract"
-set -g _mock_complist_path "$_mock_tmpfile"_fifc
-set -g _mock_fzf_output_path "$_mock_tmpfile"_fifc_out
-set -g _mock_source_output_path "$_mock_tmpfile"_fifc_source
+set -g _mock_complist_path "$_mock_tmpfile"_fzfish
+set -g _mock_fzf_output_path "$_mock_tmpfile"_fzfish_out
+set -g _mock_source_output_path "$_mock_tmpfile"_fzfish_source
 
 function mktemp
     echo $_mock_tmpfile
@@ -27,13 +27,13 @@ function commandline
     end
 end
 
-function _fifc_completion_group
+function _fzfish_completion_group
     echo $_mock_group
 end
 
-function _fifc_action
+function _fzfish_action
     if test "$argv[1]" = source
-        set -g _fifc_extract_regex '^\\h*([0-9]+)'
+        set -g _fzfish_extract_regex '^\\h*([0-9]+)'
         echo "printf '%s\\n' '249247 /proc/self/exe --type=utility'"
     end
 end
@@ -44,14 +44,14 @@ function fzf
     printf '%s\n' '249247 /proc/self/exe --type=utility'
 end
 
-set -gx fifc_open_keybinding ctrl-o
-set -gx fifc_rm_cmd false
+set -gx fzfish_open_keybinding ctrl-o
+set -gx fzfish_rm_cmd false
 
 rm -f $_mock_complist_path $_mock_fzf_output_path $_mock_source_output_path
 set -e _mock_replaced
 set -e _mock_commandline_function
 
-_fifc
+_fzfish
 
 @test "main command extracts pid from process selection" "$_mock_replaced" = '249247 '
 @test "main command repaints after process extraction" "$_mock_commandline_function" = repaint
@@ -59,8 +59,8 @@ _fifc
 functions -e mktemp
 functions -e complete
 functions -e commandline
-functions -e _fifc_completion_group
-functions -e _fifc_action
+functions -e _fzfish_completion_group
+functions -e _fzfish_action
 functions -e fzf
 
 set -e _mock_buffer
@@ -73,10 +73,10 @@ set -e _mock_source_output_path
 set -e _mock_fzf_args
 set -e _mock_replaced
 set -e _mock_commandline_function
-set -e fifc_open_keybinding
-set -e fifc_rm_cmd
+set -e fzfish_open_keybinding
+set -e fzfish_rm_cmd
 
-rm -f "$PWD/tests/_tmp_main_command_process_extract_fifc"
-rm -f "$PWD/tests/_tmp_main_command_process_extract_fifc_out"
-rm -f "$PWD/tests/_tmp_main_command_process_extract_fifc_source"
-rm -f "$PWD/tests/_tmp_main_command_process_extract_fifc_source_cmd"
+rm -f "$PWD/tests/_tmp_main_command_process_extract_fzfish"
+rm -f "$PWD/tests/_tmp_main_command_process_extract_fzfish_out"
+rm -f "$PWD/tests/_tmp_main_command_process_extract_fzfish_source"
+rm -f "$PWD/tests/_tmp_main_command_process_extract_fzfish_source_cmd"

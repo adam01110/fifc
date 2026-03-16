@@ -22,22 +22,22 @@ function ls
     echo "ls:$argv"
 end
 
-set fifc_candidate tests/_resources
+set fzfish_candidate tests/_resources
 
 set preview_dir_bin eza
-set actual (_fifc_preview_dir)
+set actual (_fzfish_preview_dir)
 @test "directory preview prefers eza" "$actual" = "eza:-1a --color=always tests/_resources"
 
 set preview_dir_bin exa
-set actual (_fifc_preview_dir)
+set actual (_fzfish_preview_dir)
 @test "directory preview falls back to exa" "$actual" = "exa:-1a --color=always tests/_resources"
 
 set preview_dir_bin ls
-set actual (_fifc_preview_dir)
+set actual (_fzfish_preview_dir)
 @test "directory preview falls back to ls" "$actual" = "ls:-A -F tests/_resources"
 
 set fzf_preview_dir_cmd 'echo custom:'
-set actual (_fifc_preview_dir)
+set actual (_fzfish_preview_dir)
 @test "directory preview allows custom command override" "$actual" = "custom: tests/_resources"
 
 functions -e type

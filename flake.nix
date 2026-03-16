@@ -1,5 +1,5 @@
 {
-  description = "";
+  description = "FzFish: fzf-powered fish completions for fish shell";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";

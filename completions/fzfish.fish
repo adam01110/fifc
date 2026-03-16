@@ -1,0 +1,7 @@
+complete fzfish --long condition --short -n --description "Command or fish function to be evaluated"
+complete fzfish --long regex --short r --description "Regex matching the part of the commandline before cursor"
+complete fzfish --long extract --short e --description "Regex applied on the sele cted candidate(s) to extract string to bo appended to the commandline (using capture groups)"
+complete fzfish --long order --short O --description "Order in which this rule must be evaluated"
+complete fzfish --long preview --short p --description "Preview command to be evaluated on the current candidate"
+complete fzfish --long open --short o --description "Open command to be evaluated on the current candidate"
+complete fzfish --long fzf-options --short f --description "Custom fzf options"

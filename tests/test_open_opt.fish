@@ -22,10 +22,10 @@ function less
     echo "$argv"
 end
 
-set fifc_commandline "mkdir -"
-set fifc_candidate --help
+set fzfish_commandline "mkdir -"
+set fzfish_candidate --help
 
-set actual (_fifc_open_opt)
+set actual (_fzfish_open_opt)
 @test "open option jumps to computed line" "$actual" = "+2"
 
 functions -e man

@@ -1,20 +1,20 @@
 {self, ...}: {
   perSystem = {pkgs, ...}: let
-    fifc = pkgs.fishPlugins.buildFishPlugin {
-      pname = "fifc";
+    fzfish = pkgs.fishPlugins.buildFishPlugin {
+      pname = "fzfish";
       version = "unstable-${self.lastModifiedDate or "dirty"}";
       src = self;
 
       meta = {
-        description = "Fzf-powered fish completions with customizable completion rules";
-        homepage = "https://github.com/adam01110/fifc";
+        description = "FzFish: fzf-powered fish completions with customizable completion rules";
+        homepage = "https://github.com/adam01110/fzfish";
         license = pkgs.lib.licenses.mit;
       };
     };
   in {
     packages = {
-      inherit fifc;
-      default = fifc;
+      inherit fzfish;
+      default = fzfish;
     };
   };
 }

@@ -15,14 +15,14 @@ function procs
     echo "procs:$argv"
 end
 
-set fifc_commandline "pkill "
-set fifc_candidate fish
+set fzfish_commandline "pkill "
+set fzfish_candidate fish
 
-set actual (_fifc_open_process)
+set actual (_fzfish_open_process)
 @test "open process resolves pkill names with procs" "$actual" = "procs:--color=always --tree --pager=always 101 202"
 
 functions -e type
 functions -e pgrep
 functions -e procs
-set -e fifc_commandline
-set -e fifc_candidate
+set -e fzfish_commandline
+set -e fzfish_candidate
