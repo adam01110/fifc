@@ -18,31 +18,48 @@ function _fzfish_set_bindings --on-variable fish_key_bindings
     set -qU fzfish_custom_fzf_opts
     or set -U fzfish_custom_fzf_opts
 
+    set -q fzfish_depth_increase_keybindings
+    or set -U fzfish_depth_increase_keybindings alt-right ctrl-l
+
+    set -q fzfish_depth_decrease_keybindings
+    or set -U fzfish_depth_decrease_keybindings alt-left ctrl-h
+
+    set -q fzfish_depth_direct_keybindings
+    or set -U fzfish_depth_direct_keybindings alt-1 alt-2 alt-3 alt-4 alt-5 alt-6 alt-7 alt-8 alt-9
+
     for mode in default insert
         bind --mode $mode $fzfish_keybinding _fzfish
     end
 
     # Build depth-control fzf options (default: depth 1)
-    # Bindings: ctrl-j/k and alt-up/down step depth, alt-1..9 jump directly
     set -l _base "--tiebreak=length,index --prompt='d:1> '"
-    set -l _base "$_base --header='ctrl-j/k | alt-up/down | alt-1..9 depth'"
+    set -l _inc_header (string join '/' $fzfish_depth_increase_keybindings)
+    set -l _dec_header (string join '/' $fzfish_depth_decrease_keybindings)
+    set -l _direct_header (string join '/' $fzfish_depth_direct_keybindings)
+    set -l _base "$_base --header='-:$_dec_header | +:$_inc_header | set:$_direct_header'"
 
     set -l _dir "$_base"
-    set -l _dir "$_dir --bind='alt-down:transform(_fzfish_depth_transform +1 d)'"
-    set -l _dir "$_dir --bind='alt-up:transform(_fzfish_depth_transform -1 d)'"
-    set -l _dir "$_dir --bind='ctrl-j:transform(_fzfish_depth_transform +1 d)'"
-    set -l _dir "$_dir --bind='ctrl-k:transform(_fzfish_depth_transform -1 d)'"
-    for _n in 1 2 3 4 5 6 7 8 9
-        set _dir "$_dir --bind='alt-$_n:transform(_fzfish_depth_transform $_n d)'"
+    for _key in $fzfish_depth_increase_keybindings
+        set _dir "$_dir --bind='$_key:transform(_fzfish_depth_transform +1 d)'"
+    end
+    for _key in $fzfish_depth_decrease_keybindings
+        set _dir "$_dir --bind='$_key:transform(_fzfish_depth_transform -1 d)'"
+    end
+    for _n in (seq (count $fzfish_depth_direct_keybindings))
+        set -l _key $fzfish_depth_direct_keybindings[$_n]
+        set _dir "$_dir --bind='$_key:transform(_fzfish_depth_transform $_n d)'"
     end
 
     set -l _file "$_base"
-    set -l _file "$_file --bind='alt-down:transform(_fzfish_depth_transform +1)'"
-    set -l _file "$_file --bind='alt-up:transform(_fzfish_depth_transform -1)'"
-    set -l _file "$_file --bind='ctrl-j:transform(_fzfish_depth_transform +1)'"
-    set -l _file "$_file --bind='ctrl-k:transform(_fzfish_depth_transform -1)'"
-    for _n in 1 2 3 4 5 6 7 8 9
-        set _file "$_file --bind='alt-$_n:transform(_fzfish_depth_transform $_n)'"
+    for _key in $fzfish_depth_increase_keybindings
+        set _file "$_file --bind='$_key:transform(_fzfish_depth_transform +1)'"
+    end
+    for _key in $fzfish_depth_decrease_keybindings
+        set _file "$_file --bind='$_key:transform(_fzfish_depth_transform -1)'"
+    end
+    for _n in (seq (count $fzfish_depth_direct_keybindings))
+        set -l _key $fzfish_depth_direct_keybindings[$_n]
+        set _file "$_file --bind='$_key:transform(_fzfish_depth_transform $_n)'"
     end
 
     # Set source rules
@@ -84,6 +101,9 @@ if set -q _fzfish_launched_by_fzf
         -n 'test -f "$fzfish_candidate"' \
         -p _fzfish_preview_file \
         -o _fzfish_open_file
+    fzfish \
+        -n 'test -d "$fzfish_candidate"' \
+        -p _fzfish_preview_dir
     fzfish \
         -n 'begin; test "$fzfish_group" = processes; and ps -p (_fzfish_parse_pid "$fzfish_candidate") >/dev/null 2>/dev/null; end; or begin; string match --regex --quiet -- "(^|.*\\h)pkill(\\h|\\$)" "$fzfish_commandline"; and pgrep -- "$fzfish_candidate" >/dev/null 2>/dev/null; end' \
         -p _fzfish_preview_process \

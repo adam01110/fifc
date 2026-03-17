@@ -53,6 +53,7 @@ function _fzfish_action
             eval $$comp_name[1][4]
             break
         else if test "$action" = source; and test -n "$$comp_name[1][5]"
+            set -g _fzfish_default_source_fzf_opts $$comp_name[1][6]
             if functions "$$comp_name[1][5]" 1>/dev/null
                 eval $$comp_name[1][5]
             else

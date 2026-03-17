@@ -17,6 +17,15 @@ set any 2
 set actual (_fzfish_action "source")
 @test "source match second" "$actual" = "echo comp_2"
 
+set comp_3 true '' '' '' 'echo comp_3' '--prompt="d:1> "'
+set _fzfish_unordered_comp comp_3
+set fzfish_commandline "dirs "
+set actual (_fzfish_action "source")
+@test "source match carries fzf options" "$actual" = "echo comp_3"
+@test "source match stores fzf options" "$_fzfish_default_source_fzf_opts" = '--prompt="d:1> "'
+
+set _fzfish_unordered_comp comp_1 comp_2
+
 set fzfish_commandline "foo "
 set actual (_fzfish_action "source")
 @test "source fallback fish suggestions" "$actual" = _fzfish_parse_complist

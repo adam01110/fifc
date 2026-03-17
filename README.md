@@ -100,11 +100,13 @@ Remember to install the requirements listed above.
 
 ## Usage
 
-You only need to set one setting after install:
+You can optionally set a custom editor after install:
 
 ```fish
 set -Ux fzfish_editor <your-favorite-editor>
 ```
+
+If `fzfish_editor` is not set, `fzfish` uses `$EDITOR` automatically.
 
 And enjoy built-in completions!
 
@@ -177,10 +179,17 @@ When set, FZFISH uses `fzf_preview_dir_cmd` instead of its built-in directory pr
 
 Interactive depth controls for file and directory search:
 
-- `alt-up` / `alt-down` or `ctrl-k` / `ctrl-j` adjust the current search depth live
-- `alt-1` .. `alt-9` jump directly to a specific depth
+- By default, `alt-left` / `ctrl-h` decrease depth and `alt-right` / `ctrl-l` increase it
+- By default, `alt-1` .. `alt-9` jump directly to a specific depth
+- Customize them with `fzfish_depth_decrease_keybindings`, `fzfish_depth_increase_keybindings`, and `fzfish_depth_direct_keybindings`
 
 Path search starts at depth 1, and the picker prompt shows the active depth as `d:N>` while you adjust it.
+
+```fish
+set -U fzfish_depth_decrease_keybindings alt-left ctrl-h
+set -U fzfish_depth_increase_keybindings alt-right alt-l
+set -U fzfish_depth_direct_keybindings alt-1 alt-2 alt-3 alt-4 alt-5
+```
 
 ## Write your own rules
 
