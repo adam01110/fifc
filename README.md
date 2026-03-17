@@ -138,6 +138,12 @@ set -U fzfish_popup true
 
 This uses `--height ~50%` by default.
 
+You can customize the height:
+
+```fish
+set -U fzfish_popup_height 30%
+```
+
 `fzfish` can use modern tools if available:
 
 | Prefer                                           | Fallback to | Used for                                  | Custom options                            |

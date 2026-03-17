@@ -65,7 +65,7 @@ function _fzfish
             $fzfish_custom_fzf_opts"
 
     if test "$fzfish_popup" = true
-        set fzf_cmd "$fzf_cmd --height ~50% --border"
+        set fzf_cmd "$fzf_cmd --height ~$fzfish_popup_height --border"
     end
 
     if command tail --pid=$fish_pid -n 0 /dev/null >/dev/null 2>/dev/null
