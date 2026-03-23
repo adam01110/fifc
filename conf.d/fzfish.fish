@@ -3,6 +3,34 @@ set -gx _fzfish_comp_count 0
 set -gx _fzfish_unordered_comp
 set -gx _fzfish_ordered_comp
 
+function _fzfish_depth_bind_opts -d "Build depth-control fzf options"
+    set -l opts "--tiebreak=length,index --prompt='d:1> '"
+    set -l inc_header (string join '/' $fzfish_depth_increase_keybindings)
+    set -l dec_header (string join '/' $fzfish_depth_decrease_keybindings)
+    set -l direct_header (string join '/' $fzfish_depth_direct_keybindings)
+    set opts "$opts --header='-:$dec_header | +:$inc_header | set:$direct_header'"
+
+    set -l depth_suffix
+    if test -n "$argv[1]"
+        set depth_suffix " $argv[1]"
+    end
+
+    for key in $fzfish_depth_increase_keybindings
+        set opts "$opts --bind='$key:transform(_fzfish_depth_transform +1$depth_suffix)'"
+    end
+
+    for key in $fzfish_depth_decrease_keybindings
+        set opts "$opts --bind='$key:transform(_fzfish_depth_transform -1$depth_suffix)'"
+    end
+
+    for index in (seq (count $fzfish_depth_direct_keybindings))
+        set -l key $fzfish_depth_direct_keybindings[$index]
+        set opts "$opts --bind='$key:transform(_fzfish_depth_transform $index$depth_suffix)'"
+    end
+
+    echo $opts
+end
+
 function _fzfish_set_bindings --on-variable fish_key_bindings
 
     # Keybindings
@@ -38,35 +66,8 @@ function _fzfish_set_bindings --on-variable fish_key_bindings
     end
 
     # Build depth-control fzf options (default: depth 1)
-    set -l _base "--tiebreak=length,index --prompt='d:1> '"
-    set -l _inc_header (string join '/' $fzfish_depth_increase_keybindings)
-    set -l _dec_header (string join '/' $fzfish_depth_decrease_keybindings)
-    set -l _direct_header (string join '/' $fzfish_depth_direct_keybindings)
-    set -l _base "$_base --header='-:$_dec_header | +:$_inc_header | set:$_direct_header'"
-
-    set -l _dir "$_base"
-    for _key in $fzfish_depth_increase_keybindings
-        set _dir "$_dir --bind='$_key:transform(_fzfish_depth_transform +1 d)'"
-    end
-    for _key in $fzfish_depth_decrease_keybindings
-        set _dir "$_dir --bind='$_key:transform(_fzfish_depth_transform -1 d)'"
-    end
-    for _n in (seq (count $fzfish_depth_direct_keybindings))
-        set -l _key $fzfish_depth_direct_keybindings[$_n]
-        set _dir "$_dir --bind='$_key:transform(_fzfish_depth_transform $_n d)'"
-    end
-
-    set -l _file "$_base"
-    for _key in $fzfish_depth_increase_keybindings
-        set _file "$_file --bind='$_key:transform(_fzfish_depth_transform +1)'"
-    end
-    for _key in $fzfish_depth_decrease_keybindings
-        set _file "$_file --bind='$_key:transform(_fzfish_depth_transform -1)'"
-    end
-    for _n in (seq (count $fzfish_depth_direct_keybindings))
-        set -l _key $fzfish_depth_direct_keybindings[$_n]
-        set _file "$_file --bind='$_key:transform(_fzfish_depth_transform $_n)'"
-    end
+    set -l _dir (_fzfish_depth_bind_opts d)
+    set -l _file (_fzfish_depth_bind_opts)
 
     # Set source rules
     fzfish \

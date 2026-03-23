@@ -1,11 +1,5 @@
 function _fzfish_preview_process -d "Preview process informations"
-    set -l pids (_fzfish_parse_pid "$fzfish_candidate")
-
-    if test -z "$pids"
-        if string match --regex --quiet -- '(^|.*\h)pkill(\h|$)' "$fzfish_commandline"
-            set pids (pgrep -- "$fzfish_candidate" 2>/dev/null)
-        end
-    end
+    set -l pids (_fzfish_parse_pid "$fzfish_candidate" "$fzfish_commandline")
 
     set -l ps_pids (string join ',' $pids)
     set -l err_msg "\nThe process exited"
