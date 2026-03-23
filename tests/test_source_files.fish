@@ -17,6 +17,17 @@ set match (string match -- "*--hidden*" "$actual")
 @test "source files fd command shows hidden when enabled" "$match" = "$actual"
 set -e fzfish_show_hidden
 
+set -gx fzfish_query tests/_resources/
+set actual (_fzfish_source_files 3 d false)
+set match (string match -- "* -t d *--max-depth 3*" "$actual")
+@test "source files fd command forwards depth and directory type" "$match" = "$actual"
+@test "source files fd command can preserve query on reload" "$fzfish_query" = tests/_resources/
+
+set -gx fzfish_token .hidden/
+set actual (_fzfish_source_files)
+set match (string match -- "*--hidden*" "$actual")
+@test "source files fd command shows hidden for hidden path" "$match" = "$actual"
+
 set -gx fzfish_token "$PWD/"
 set -gx fzfish_query "$PWD/"
 set actual (_fzfish_source_files)
@@ -45,6 +56,18 @@ set match (string match -- "*! -path '*/.*'*" "$actual")
 @test "source files find fallback includes hidden when enabled" "$match" = ""
 set match (string match -- "*! -path .* -print*" "$actual")
 @test "source files find fallback still prints matches" "$match" = "$actual"
+
+set -e fzfish_show_hidden
+set -gx fzfish_query tests/_resources/
+set actual (_fzfish_source_files 4 d false)
+set match (string match -- "* -maxdepth 4 * -type d *" "$actual")
+@test "source files find fallback forwards depth and directory type" "$match" = "$actual"
+@test "source files find fallback can preserve query on reload" "$fzfish_query" = tests/_resources/
+
+set -gx fzfish_token .hidden/
+set actual (_fzfish_source_files)
+set match (string match -- "*! -path '*/.*'*" "$actual")
+@test "source files find fallback shows hidden for hidden path" "$match" = ""
 
 functions -e type
 set -e fzfish_token

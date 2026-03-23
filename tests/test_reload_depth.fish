@@ -24,5 +24,12 @@ set match (string match -- "*target.txt*" "$actual")
 @test "reload depth find mode preserves query" "$fzfish_query" = tests/_resources/
 
 functions -e type
+
+set -gx fzfish_token tests/_resources
+set -e _fzfish_complist_path
+_fzfish_reload_depth 1 >/dev/null
+set actual_status $status
+@test "reload depth plain completion without complist path succeeds" "$actual_status" = 0
+
 set -e fzfish_token
 set -e fzfish_query

@@ -1,11 +1,9 @@
 function _fzfish_completion_group -d "Determine completion group"
     set -l path_candidate (_fzfish_path_to_complete)
-    # Empty means that either $path_candidate is empty or is not a directory
-    set -l path_entries (ls -A -- $path_candidate 2> /dev/null | string collect)
     set -l complist (string escape -- (_fzfish_expand_tilde (_fzfish_parse_complist)))
     set dir_test "test "(string join -- " -a " "-d "$complist)
 
-    if test -n "$path_entries"
+    if test -d "$path_candidate"
         if eval "$dir_test"
             echo directories
             return
