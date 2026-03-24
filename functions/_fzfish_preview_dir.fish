@@ -8,7 +8,15 @@ function _fzfish_preview_dir -d "List content of the selected directory"
 
     for dir_cmd in eza exa
         if type -q $dir_cmd
-            $dir_cmd -1a --color=always $fzfish_exa_opts "$filepath"
+            set -l dir_opts
+            switch $dir_cmd
+                case eza
+                    set dir_opts $fzfish_eza_opts
+                case exa
+                    set dir_opts $fzfish_exa_opts
+            end
+
+            $dir_cmd -1a --color=always $dir_opts "$filepath"
             return
         end
     end

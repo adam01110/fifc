@@ -23,12 +23,13 @@ function ls
 end
 
 set fzfish_candidate tests/_resources
+set fzfish_eza_opts --icons
 set fzfish_exa_opts --group-directories-first
 set fzfish_ls_opts --color=always
 
 set preview_dir_bin eza
 set actual (_fzfish_preview_dir)
-@test "directory preview prefers eza" "$actual" = "eza:-1a --color=always --group-directories-first tests/_resources"
+@test "directory preview prefers eza" "$actual" = "eza:-1a --color=always --icons tests/_resources"
 
 set preview_dir_bin exa
 set actual (_fzfish_preview_dir)
@@ -48,5 +49,6 @@ functions -e exa
 functions -e ls
 set -e fzf_preview_dir_cmd
 set -e preview_dir_bin
+set -e fzfish_eza_opts
 set -e fzfish_exa_opts
 set -e fzfish_ls_opts
